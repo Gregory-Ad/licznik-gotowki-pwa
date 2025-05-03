@@ -1,12 +1,13 @@
+
 {
   "name": "Licznik Gotówki USD",
   "short_name": "LicznikCash",
   "description": "Prosta aplikacja PWA do liczenia dolarów i centów.",
-  "start_url": ".", 
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#007bff", 
-  "scope": ".", 
+  "background_color": "#0d3c4f", 
+  "theme_color": "#1a7a8c",    
+  "scope": ".",
   "icons": [
     {
       "src": "icons/icon-192x192.png",

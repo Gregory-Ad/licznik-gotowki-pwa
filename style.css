@@ -2,30 +2,29 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
 
 :root {
-    /* --- Palety Kolorów (bez zmian) --- */
-    --aqua-deep-bg: #0d3c4f;
-    --aqua-mid: #1a7a8c;
-    --aqua-light: #65c8d0;
-    --aqua-glass-bg: rgba(26, 122, 140, 0.4);
-    --aqua-highlight: #a2f3ef;
-    --ember-yellow: #ffcc33;
-    --ember-orange: #ff884d;
-    --ember-red: #ff4d4d;
-    --ember-glow: rgba(255, 136, 77, 0.7);
-    --ember-shadow: rgba(200, 50, 50, 0.4);
-    --violet-accent: #8a4fff;
+    /* --- Paleta Wody (Aqua) --- */
+    --aqua-deep-bg: #0d3c4f; /* Ciemniejszy, mniej nasycony granat tła */
+    --aqua-mid: #1a7a8c;   /* Średni turkus/cyjan */
+    --aqua-light: #65c8d0; /* Jasny turkus */
+    --aqua-glass-bg: rgba(26, 122, 140, 0.4); /* Bardziej widoczne szkło wodne */
+    --aqua-highlight: #a2f3ef; /* Bardzo jasna poświata cyjanu */
+
+    /* --- Paleta Żaru (Ember) --- */
+    --ember-yellow: #ffcc33; /* Żółty jak płomień */
+    --ember-orange: #ff884d; /* Jasny pomarańcz */
+    --ember-red: #ff4d4d;    /* Intensywna czerwień */
+    --ember-glow: rgba(255, 136, 77, 0.7); /* Pomarańczowa poświata */
+    --ember-shadow: rgba(200, 50, 50, 0.4); /* Czerwonawy cień */
+
+    /* --- Paleta Neutralna/Akcentowa --- */
+    --violet-accent: #8a4fff; /* Fioletowy dla kontrastu (np. Reset) */
     --deep-violet: #4a1a9c;
-    --text-light-primary: #f0f8ff;
-    --text-dark-accent: #1f3a44;
-    --bg-light-contrast: #e8f4f8;
+    --text-light-primary: #f0f8ff; /* Bardzo jasny, prawie biały (AliceBlue) */
+    --text-dark-accent: #1f3a44;  /* Ciemny, lekko niebieskawy szary dla tekstu */
+    --bg-light-contrast: #e8f4f8; /* Bardzo jasne tło dla wyników (kontrast) */
     --border-light: rgba(255, 255, 255, 0.2);
     --shadow-dark: rgba(0, 0, 0, 0.2);
-    --blur-intensity: 8px;
-
-    /* --- Krzywe Easingu --- */
-    --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Standardowa, płynna */
-    --ease-out-back-subtle: cubic-bezier(0.34, 1.26, 0.64, 1); /* Lekkie "odbicie" na końcu */
-    --ease-in-out-sine: cubic-bezier(0.445, 0.05, 0.55, 0.95); /* Bardzo gładka */
+    --blur-intensity: 8px; /* Zmniejszony blur dla czytelności */
 }
 
 /* --- Animacje --- */
@@ -35,22 +34,18 @@
     100% { background-position: 0% 50%; }
 }
 
+/* Animacja Ognistej Poświaty Inputa */
 @keyframes inputEmberGlow {
     0% { box-shadow: 0 0 7px 2px var(--ember-glow), inset 1px 1px 3px var(--shadow-dark); }
     50% { box-shadow: 0 0 14px 5px var(--ember-glow), inset 1px 1px 3px var(--shadow-dark); }
     100% { box-shadow: 0 0 7px 2px var(--ember-glow), inset 1px 1px 3px var(--shadow-dark); }
 }
 
+/* Animacja aktualizacji "Flash" */
 @keyframes flashUpdate {
     0% { transform: scale(1); opacity: 1; color: var(--ember-yellow); text-shadow: 0 0 8px var(--ember-orange); }
     50% { transform: scale(1.1); opacity: 0.8; }
-    100% { transform: scale(1); opacity: 1; color: inherit; text-shadow: inherit; }
-}
-
-/* Animacja Połysku Przycisku */
-@keyframes buttonShine {
-    0% { transform: translateX(-150%) skewX(-25deg); }
-    100% { transform: translateX(150%) skewX(-25deg); }
+    100% { transform: scale(1); opacity: 1; color: inherit; text-shadow: inherit; } /* Wróć do normalnego koloru/cienia */
 }
 
 
@@ -58,11 +53,12 @@
 
 body {
     font-family: 'Nunito', sans-serif;
-    color: var(--text-light-primary);
+    color: var(--text-light-primary); /* Domyślnie jasny tekst */
     line-height: 1.6;
     padding: 15px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Tło wodne */
     background: linear-gradient(135deg, var(--aqua-deep-bg), var(--aqua-mid), var(--aqua-light));
     background-size: 300% 300%;
     animation: flowBackground 15s ease infinite;
@@ -74,32 +70,21 @@ body {
 .container {
     max-width: 700px;
     margin: 30px auto;
-    perspective: 1200px;
-    position: relative;
-    z-index: 0;
-    border-radius: 35px;
-    padding: 30px 35px;
-    /* Warstwowy, łagodniejszy cień */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15),
-                0 15px 45px rgba(0, 0, 0, 0.1);
-    border: 1px solid var(--border-light);
-    overflow: hidden;
-    background: transparent;
-}
-
-.container::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: var(--aqua-glass-bg);
+    /* Efekt szkła, ale bardziej widoczny */
+    background: var(--aqua-glass-bg); /* Przywrócono tło bezpośrednio na kontenerze */
     backdrop-filter: blur(var(--blur-intensity));
     -webkit-backdrop-filter: blur(var(--blur-intensity));
-    border-radius: inherit;
-    z-index: -1;
+    border-radius: 35px; /* Nadal okrągło */
+    padding: 30px 35px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Przywrócono poprzedni cień */
+    border: 1px solid var(--border-light);
+    position: relative; /* Nadal potrzebne dla niektórych elementów wewnątrz */
+    overflow: hidden;
 }
 
 h1 {
     text-align: center;
+    /* Gradient od ciepłego do chłodnego */
     background: linear-gradient(to right, var(--ember-yellow), var(--aqua-highlight), var(--text-light-primary));
     -webkit-background-clip: text;
     background-clip: text;
@@ -109,9 +94,7 @@ h1 {
     font-size: 2.1em;
     padding-bottom: 5px;
     line-height: 1.3;
-    /* Efekt lekko wklęsłego tekstu */
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4); /* Cień na dole */
-                /* 0 -1px 0 rgba(255, 255, 255, 0.1); */ /* Opcjonalny górny highlight */
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtelny cień dla lepszego oddzielenia */
 }
 
 #denominations-list {
@@ -121,30 +104,23 @@ h1 {
 .denomination-row {
     display: flex; justify-content: space-between; align-items: center;
     padding: 15px 5px; position: relative; gap: 15px; flex-wrap: wrap;
+    /* Lekko widoczne tło dla wiersza */
     background-color: rgba(255, 255, 255, 0.03);
-    border-radius: 15px; margin-bottom: 8px;
-    transition: background-color 0.3s var(--ease-in-out-sine),
-                transform 0.25s var(--ease-out-quad), /* Używamy zdefiniowanych krzywych */
-                box-shadow 0.3s var(--ease-in-out-sine);
-    will-change: transform, box-shadow;
+    border-radius: 15px;
+    margin-bottom: 8px; /* Odstęp między wierszami */
+    transition: background-color 0.3s ease;
 }
-.denomination-row::after { display: none; }
+.denomination-row::after { display: none; } /* Bez linii */
 
 .denomination-row:hover {
     background-color: rgba(255, 255, 255, 0.08);
-    transform: translateY(-4px) scale(1.01);
-    /* Warstwowy cień dla uniesienia */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18),
-                0 8px 25px rgba(0, 0, 0, 0.12);
-    z-index: 1;
-    position: relative;
 }
 
 .denomination-label {
     flex-basis: 100%; font-weight: 600;
-    color: var(--text-light-primary);
+    color: var(--text-light-primary); /* Jasny tekst na ciemnym tle */
     font-size: 1rem; margin-bottom: 10px;
-    padding-left: 10px;
+    padding-left: 10px; /* Wcięcie */
 }
 
 .inputs-container {
@@ -154,24 +130,25 @@ h1 {
 
 .quantity-input {
     padding: 12px 16px; border: none;
-    border-radius: 20px;
+    border-radius: 20px; /* Mniej ekstremalne zaokrąglenie */
     text-align: right; font-family: inherit; font-size: 1rem;
+    /* Ciemniejsze tło inputa dla kontrastu */
     background-color: rgba(0, 0, 0, 0.3);
-    color: var(--text-light-primary);
-    /* Wyraźniejszy cień wewnętrzny dla głębi */
-    box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.35);
-    transition: box-shadow 0.3s var(--ease-in-out-sine), background-color 0.3s var(--ease-in-out-sine);
+    color: var(--text-light-primary); /* Jasny tekst w inpucie */
+    box-shadow: inset 1px 1px 3px var(--shadow-dark);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
     min-height: 46px; outline: none;
 }
 .quantity-input::placeholder {
-    color: rgba(240, 248, 255, 0.6);
+    color: rgba(240, 248, 255, 0.6); /* Jaśniejszy, czytelny placeholder */
     opacity: 1;
 }
 .quantity-input::-webkit-outer-spin-button,
 .quantity-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
 .quantity-input:focus {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.4); /* Lekko ciemniej na focusie */
+    /* Ognista poświata na focusie */
     animation: inputEmberGlow 1.3s ease-in-out infinite alternate;
 }
 
@@ -186,12 +163,12 @@ h1 {
 .subtotal {
     flex-basis: auto; order: 1; text-align: right;
     font-weight: 700;
-    color: var(--aqua-highlight);
+    color: var(--aqua-highlight); /* Jasny, czytelny kolor wodny */
     font-size: 1.1rem; padding-left: 10px;
-    align-self: center;
-    margin: 0;
+    align-self: center; /* Wyśrodkuj pionowo z inputami */
+    margin: 0; /* Reset marginesu */
     white-space: nowrap;
-    text-shadow: 0 0 6px rgba(162, 243, 239, 0.5);
+    text-shadow: 0 0 6px rgba(162, 243, 239, 0.5); /* Subtelna poświata */
 }
 
 .subtotal.updated, #grand-total.updated {
@@ -200,6 +177,7 @@ h1 {
 
 .total-section {
     margin-top: 35px; padding: 25px;
+    /* Gradient od chłodnego fioletu do ciepłego pomarańczu */
     background: linear-gradient(145deg, var(--violet-accent), var(--ember-orange));
     border-radius: 30px; text-align: center; color: var(--text-light-primary);
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.25), 0 6px 20px rgba(0, 0, 0, 0.2);
@@ -215,31 +193,29 @@ h1 {
 #grand-total {
     font-size: 2.8em; font-weight: 700; display: block;
     line-height: 1.1; margin-bottom: 5px;
-    color: var(--text-light-primary);
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    color: var(--text-light-primary); /* Bezpośrednio jasny kolor dla czytelności */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Mocniejszy cień dla kontrastu */
     word-break: break-all; position: relative; z-index: 1;
 }
 
 .withdrawal-section { margin-top: 30px; margin-bottom: 30px; text-align: center; }
 
+/* Wyniki wypłaty - jasne tło, ciemny tekst */
 .withdrawal-results-display {
     padding: 20px 25px;
-    background-color: var(--bg-light-contrast);
-    color: var(--text-dark-accent);
+    background-color: var(--bg-light-contrast); /* Jasne, prawie nieprzezroczyste tło */
+    color: var(--text-dark-accent); /* Ciemny tekst dla czytelności */
     border-radius: 20px;
     text-align: left; font-size: 0.95rem;
     line-height: 1.6; margin-top: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05); /* Subtelna ramka */
 
     opacity: 0; transform: translateY(10px); max-height: 0;
     overflow: hidden;
-    transition: opacity 0.35s var(--ease-in-out-sine),
-                transform 0.35s var(--ease-out-quad),
-                max-height 0.4s ease-out,
-                margin-top 0.35s var(--ease-in-out-sine),
-                padding 0.35s var(--ease-in-out-sine),
-                border-width 0.35s var(--ease-in-out-sine),
-                box-shadow 0.35s var(--ease-in-out-sine);
+    transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease,
+                margin-top 0.35s ease, padding 0.35s ease, border-width 0.35s ease,
+                box-shadow 0.35s ease;
 }
 .withdrawal-results-display.visible {
     opacity: 1; transform: translateY(0); max-height: 1000px;
@@ -253,12 +229,12 @@ h1 {
 
 .withdrawal-results-display h3 {
     margin-top: 0; margin-bottom: 12px; font-size: 1.1rem;
-    font-weight: 700; color: var(--deep-violet);
+    font-weight: 700; color: var(--deep-violet); /* Akcent fioletowy */
 }
 .withdrawal-results-display p { margin-bottom: 8px; color: var(--text-dark-accent); }
 .withdrawal-results-display p:last-child { margin-bottom: 0; }
 
-/* Przyciski z animowanym połyskiem */
+/* Przyciski - ognisty dla akcji, fioletowy dla resetu */
 #calculate-100-button,
 #reset-button {
     display: block; width: 100%; padding: 15px 20px; margin-bottom: 20px;
@@ -266,84 +242,48 @@ h1 {
     text-transform: uppercase; letter-spacing: 1.2px;
     color: var(--text-light-primary);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    transition: transform 0.18s var(--ease-out-back-subtle), /* Użyto innej krzywej dla wciśnięcia */
-                filter 0.2s var(--ease-in-out-sine),
-                box-shadow 0.25s var(--ease-in-out-sine);
-    min-height: 50px; position: relative; overflow: hidden; /* Ważne dla pseudo-elementu */
-    will-change: transform, box-shadow, filter;
+    box-shadow: 0 5px 15px var(--shadow-dark); /* Subtelniejszy cień */
+    transition: all 0.2s ease-out; /* Prostszy transition */
+    min-height: 50px;
+    position: relative;
+    overflow: hidden;
 }
-
-/* Dodajemy pseudo-element dla połysku */
-#calculate-100-button::after,
-#reset-button::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0; /* Start poza lewą krawędzią */
-    width: 50%; /* Szerokość połysku */
-    height: 100%;
-    background: linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.25) 50%, /* Subtelny biały połysk */
-        rgba(255, 255, 255, 0) 100%
-    );
-    transform: translateX(-150%) skewX(-25deg); /* Początkowa pozycja poza ekranem */
-    z-index: 1; /* Nad tłem, pod tekstem (jeśli tekst ma z-index) */
-    transition: transform 0s; /* Natychmiastowy reset pozycji bez hover */
-}
-
-#calculate-100-button:hover::after,
-#reset-button:hover::after {
-    animation: buttonShine 1.2s var(--ease-in-out-sine);
-    /* transition: transform 0.8s var(--ease-in-out-sine); */ /* Alternatywa bez @keyframes */
-    /* transform: translateX(150%) skewX(-25deg); */
-}
-
 
 #calculate-100-button {
+    /* Ognisty gradient */
     background: linear-gradient(135deg, var(--ember-orange), var(--ember-red));
-    /* Warstwowy cień */
-    box-shadow: 0 3px 8px color-mix(in srgb, var(--ember-shadow) 70%, transparent),
-                0 6px 18px color-mix(in srgb, var(--ember-shadow) 40%, transparent);
+    box-shadow: 0 5px 15px var(--ember-shadow); /* Cień w kolorze ognia */
     font-size: 1.1em;
 }
 #reset-button {
+     /* Fioletowy gradient dla kontrastu */
      background: linear-gradient(135deg, var(--violet-accent), var(--deep-violet));
-    /* Warstwowy cień */
-    box-shadow: 0 3px 8px rgba(74, 26, 156, 0.3),
-                0 6px 18px rgba(74, 26, 156, 0.2);
-    font-size: 1rem;
-    margin-bottom: 0;
+     box-shadow: 0 5px 15px rgba(74, 26, 156, 0.4); /* Cień fioletowy */
+     font-size: 1rem;
+     margin-bottom: 0;
 }
 
 #calculate-100-button:hover,
 #reset-button:hover {
-    transform: translateY(-5px) scale(1.02);
-    filter: brightness(1.2);
-    /* Wyraźniejszy, warstwowy cień na hover */
-    box-shadow: 0 5px 12px color-mix(in srgb, var(--ember-shadow) 80%, transparent),
-                0 12px 30px color-mix(in srgb, var(--ember-shadow) 50%, transparent);
+    transform: translateY(-2px) scale(1.01); /* Mniejsze uniesienie */
+    filter: brightness(1.15); /* Rozjaśnienie na hover */
+    box-shadow: 0 8px 20px var(--ember-shadow); /* Intensywniejszy cień */
 }
 #reset-button:hover {
-    box-shadow: 0 5px 12px rgba(74, 26, 156, 0.4),
-                0 12px 30px rgba(74, 26, 156, 0.3);
+    box-shadow: 0 8px 20px rgba(74, 26, 156, 0.5);
 }
 
 #calculate-100-button:active,
 #reset-button:active {
-    transform: translateY(2px) scale(0.97);
-    filter: brightness(0.85);
-    /* Cień wciśniętego przycisku + inset */
-    box-shadow: 0 1px 4px color-mix(in srgb, var(--ember-shadow) 90%, transparent),
-                inset 0 2px 5px rgba(0,0,0,0.3);
+    transform: translateY(1px) scale(0.98); /* Mniejsze wciśnięcie */
+    filter: brightness(0.9); /* Przyciemnienie na active */
+    box-shadow: 0 2px 8px var(--ember-shadow);
 }
 #reset-button:active {
-    box-shadow: 0 1px 4px rgba(74, 26, 156, 0.5),
-                inset 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 8px rgba(74, 26, 156, 0.4);
 }
 
-/* Media query bez zmian w logice */
+/* Dostosowanie do szerszych ekranów */
 @media (min-width: 600px) {
     body { padding: 30px; }
     .container { padding: 40px 50px; border-radius: 40px; margin: 40px auto; }
