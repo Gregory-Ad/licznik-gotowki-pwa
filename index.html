@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Licznik Gotówki</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Link do Google Fonts bez &display=swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#007bff"/>
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Licznik Gotówki USD</h1>
+
+        <div id="denominations-list">
+            <!-- Nominały zostaną dodane dynamicznie przez JavaScript -->
+        </div>
+
+        <div class="total-section">
+            <h2>Suma Całkowita:</h2>
+            <span id="grand-total">$0.00</span>
+        </div>
+
+        <div class="withdrawal-section">
+             <button id="calculate-100-button">$100</button>
+             <div id="withdrawal-results" class="withdrawal-results-display" style="display: none;">
+                 <!-- Wyniki wypłaty pojawią się tutaj -->
+             </div>
+        </div>
+
+        <button id="reset-button">Wyczyść wszystko</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Prosta rejestracja Service Workera
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker zarejestrowany: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('Rejestracja ServiceWorker nie powiodła się: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>     
