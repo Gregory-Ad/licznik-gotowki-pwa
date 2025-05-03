@@ -1,6 +1,6 @@
 // --- START OF FILE sw.js ---
 
-const CACHE_NAME = 'cash-counter-cache-v4'; // Zwiększona wersja cache'u
+const CACHE_NAME = 'cash-counter-cache-v4'; // Używamy nowej wersji dla pewności aktualizacji
 const urlsToCache = [
   '.', // Katalog bieżący
   'index.html',
@@ -9,8 +9,8 @@ const urlsToCache = [
   'manifest.json',
   'icons/icon-192x192.png',
   'icons/icon-512x512.png',
-  'background.jpg',
-  'offline.html' // <--- Dodana strona offline
+  'background.jpg'
+  // 'offline.html' <-- Usunięto
 ];
 
 // Instalacja Service Workera
@@ -20,12 +20,14 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('[Service Worker] Otwarto cache, cachowanie podstawowych zasobów');
+        // Dodajemy zasoby pojedynczo, aby w razie błędu jednego, inne mogły zostać zcache'owane
+        // Chociaż addAll jest wygodniejsze, jest "wszystko albo nic".
+        // Dla większej odporności można by użyć pętli i cache.add(), ale addAll jest tu OK.
         return cache.addAll(urlsToCache);
       })
       .catch(error => {
           console.error('[Service Worker] Nie udało się zcache\'ować zasobów podczas instalacji:', error);
-          // Rzucenie błędu może zatrzymać instalację, jeśli krytyczne pliki nie zostaną zcache'owane.
-          // W zależności od potrzeb, można to obsłużyć inaczej.
+          // Rzucenie błędu zatrzyma instalację
           throw error;
       })
   );
@@ -55,11 +57,10 @@ self.addEventListener('activate', event => {
 });
 
 
-// Przechwytywanie żądań sieciowych
+// Przechwytywanie żądań sieciowych (Cache First, Network Fallback)
 self.addEventListener('fetch', event => {
-  // Ignoruj żądania inne niż GET (np. POST), aby uniknąć cachowania niepotrzebnych danych
+  // Ignoruj żądania inne niż GET
   if (event.request.method !== 'GET') {
-    // Pozwól przeglądarce obsłużyć żądanie normalnie
     return;
   }
 
@@ -81,10 +82,10 @@ self.addEventListener('fetch', event => {
         // console.log('[Service Worker] Zasób nieznaleziony w cache, pobieranie z sieci:', event.request.url);
         return fetch(event.request).then(
           networkResponse => {
-            // Sprawdź, czy odpowiedź sieciowa jest poprawna
+            // Sprawdź, czy odpowiedź sieciowa jest poprawna (200 OK, typ 'basic')
             if(!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
                 // console.warn('[Service Worker] Niepoprawna odpowiedź sieciowa, nie cachuję:', event.request.url, networkResponse);
-                return networkResponse; // Zwróć niepoprawną odpowiedź (np. 404)
+                return networkResponse; // Zwróć odpowiedź taką jaka jest (np. 404)
             }
 
             // Odpowiedź jest poprawna - sklonuj ją, aby móc ją zcache'ować i zwrócić
@@ -102,23 +103,13 @@ self.addEventListener('fetch', event => {
             // Zwróć oryginalną odpowiedź sieciową do przeglądarki
             return networkResponse;
           }
+        // Usunięto blok .catch(), który zwracał stronę offline.
+        // Teraz, jeśli fetch zawiedzie (np. brak sieci), błąd zostanie przepuszczony,
+        // a przeglądarka wyświetli standardowy komunikat o błędzie sieciowym.
         ).catch(error => {
-            // Błąd podczas pobierania z sieci (prawdopodobnie offline)
-            console.warn('[Service Worker] Błąd fetch, prawdopodobnie offline. Zwracam stronę offline.', error);
-            // Spróbuj zwrócić stronę offline z cache
-            return caches.match('offline.html').then(offlineResponse => {
-                if (offlineResponse) {
-                    return offlineResponse;
-                } else {
-                    // Jeśli nawet strona offline nie jest w cache (co nie powinno się zdarzyć po instalacji)
-                    // Zwróć prostą odpowiedź tekstową lub pustą odpowiedź błędu
-                    console.error('[Service Worker] Strona offline nie znaleziona w cache!');
-                    return new Response("Jesteś offline, a strona offline nie została znaleziona w cache.", {
-                        status: 503, // Service Unavailable
-                        headers: { 'Content-Type': 'text/plain' }
-                    });
-                }
-            });
+             console.error('[Service Worker] Fetch failed:', error);
+             // Rzucamy błąd dalej, aby przeglądarka mogła go obsłużyć jako błąd sieciowy
+             throw error;
         });
       })
   );
