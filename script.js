@@ -1,7 +1,5 @@
-const calculateWithdrawal = () => {
-    console.log("--- Przycisk $100 KLIKNIĘTY - start funkcji calculateWithdrawal ---"); // <--- DODAJ TEN LOG
-    // ... reszta kodu funkcji ...
-};
+
+;
 document.addEventListener('DOMContentLoaded', () => {
     // ... (stałe na początku bez zmian: denominationsList, grandTotalElement, etc.) ...
     const denominationsList = document.getElementById('denominations-list');
@@ -90,10 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         hideWithdrawalResults(); // Nadal ukrywamy wyniki, jeśli coś się zmieniło
     };
-
+ 
     // Funkcja obliczania wypłaty (logika bez zmian, tylko sposób wyświetlania)
     const calculateWithdrawal = () => {
         // ... (cała logika obliczeń calculateWithdrawal pozostaje BEZ ZMIAN) ...
+        const calculateWithdrawal = () => {
+            console.log("--- Przycisk $100 KLIKNIĘTY - start funkcji calculateWithdrawal ---"); // <--- DODAJ TEN LOG
+            // ... reszta kodu funkcji ...
+        };
         const targetGrandTotalInCents = 10000;
         calculateTotal();
         if (currentGrandTotalInCents <= targetGrandTotalInCents) {
