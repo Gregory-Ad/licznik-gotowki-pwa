@@ -3,21 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Licznik Gotówki USD</title>
+    <title>Licznik Gotówki USD - Quantum Flux</title> <!-- Zaktualizowany tytuł -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Link do Google Fonts (Nunito) -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Linki do czcionek (Poppins, Share Tech Mono) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1a7a8c"/> <!-- Kolor z palety Aqua -->
+    <!-- Zaktualizowany theme-color do palety Quantum Flux -->
+    <meta name="theme-color" content="#020510"/>
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 </head>
 <body>
+    <!-- DEFINICJA FILTRU SVG DLA BLASKU INPUTÓW -->
+    <svg width="0" height="0" style="position:absolute; z-index: -1;">
+      <defs>
+        <filter id="inputGlowEffect">
+           <feTurbulence type="turbulence" baseFrequency="0.8 0.8" numOctaves="1" result="turbulence"/>
+           <feGaussianBlur stdDeviation="1.5" in="turbulence" result="blurredTurbulence"/>
+           <feComposite operator="in" in="SourceGraphic" in2="blurredTurbulence" result="coloredGlow"/>
+           <feMerge>
+            <feMergeNode in="coloredGlow"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+    </svg>
+    <!-- Koniec definicji filtru SVG -->
+
+    <canvas id="webgl-background"></canvas> <!-- Tło WebGL -->
 
     <div class="container">
-        <h1>Licznik Gotówki USD</h1>
+        <h1>Licznik Gotówki USD</h1> <!-- Można by też dać tu bardziej tech-tytuł -->
 
         <div id="denominations-list">
             <!-- Nominały zostaną dodane dynamicznie przez JavaScript -->
@@ -29,23 +47,26 @@
         </div>
 
         <div class="withdrawal-section">
-             <button id="calculate-100-button">$100</button>
+             <button id="calculate-100-button">// Oblicz $100</button> <!-- Tech-styl przycisku -->
              <div id="withdrawal-results" class="withdrawal-results-display">
                  <!-- Wyniki wypłaty pojawią się tutaj -->
              </div>
         </div>
 
-        <button id="reset-button">Wyczyść wszystko</button>
+        <button id="reset-button">> Resetuj System</button> <!-- Tech-styl przycisku -->
     </div>
 
     <script src="script.js"></script>
+    <!-- Pamiętaj, aby background.js był załadowany z 'defer' -->
+    <script src="background.js" defer></script>
     <script>
+        // Rejestracja Service Workera (bez zmian)
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
                     .then(registration => {
                         console.log('ServiceWorker zarejestrowany: ', registration);
-                        console.log('Scope:', registration.scope);
+                        // console.log('Scope:', registration.scope); // Mniej ważne info
                     })
                     .catch(registrationError => {
                         console.error('Rejestracja ServiceWorker nie powiodła się: ', registrationError);

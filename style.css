@@ -1,303 +1,324 @@
-/* Import czcionki */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+/* --- START OF FILE style.css (Quantum Flux - Etap 4: Animacja Przycisków) --- */
+
+/* Import czcionek */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Share+Tech+Mono&display=swap');
 
 :root {
-    /* --- Paleta Wody (Aqua) --- */
-    --aqua-deep-bg: #0d3c4f; /* Ciemniejszy, mniej nasycony granat tła */
-    --aqua-mid: #1a7a8c;   /* Średni turkus/cyjan */
-    --aqua-light: #65c8d0; /* Jasny turkus */
-    --aqua-glass-bg: rgba(26, 122, 140, 0.4); /* Bardziej widoczne szkło wodne */
-    --aqua-highlight: #a2f3ef; /* Bardzo jasna poświata cyjanu */
+    /* --- Paleta Quantum Flux --- */
+    --qf-bg-dark: #020510;
+    --qf-bg-mid: #0a0f20;
+    --qf-energy-primary: #50d0ff; /* Lodowaty błękit */
+    --qf-energy-secondary: #ffd700; /* Złoty/żółty */
+    --qf-energy-tertiary: #ffffff; /* Biały */
+    --qf-text-subtle: #a0b0c0;
+    --qf-error-glow: #ff4d4d;
 
-    /* --- Paleta Żaru (Ember) --- */
-    --ember-yellow: #ffcc33; /* Żółty jak płomień */
-    --ember-orange: #ff884d; /* Jasny pomarańcz */
-    --ember-red: #ff4d4d;    /* Intensywna czerwień */
-    --ember-glow: rgba(255, 136, 77, 0.7); /* Pomarańczowa poświata */
-    --ember-shadow: rgba(200, 50, 50, 0.4); /* Czerwonawy cień */
+    /* --- Fonty --- */
+    --font-primary: 'Poppins', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
 
-    /* --- Paleta Neutralna/Akcentowa --- */
-    --violet-accent: #8a4fff; /* Fioletowy dla kontrastu (np. Reset) */
-    --deep-violet: #4a1a9c;
-    --text-light-primary: #f0f8ff; /* Bardzo jasny, prawie biały (AliceBlue) */
-    --text-dark-accent: #1f3a44;  /* Ciemny, lekko niebieskawy szary dla tekstu */
-    --bg-light-contrast: #e8f4f8; /* Bardzo jasne tło dla wyników (kontrast) */
-    --border-light: rgba(255, 255, 255, 0.2);
-    --shadow-dark: rgba(0, 0, 0, 0.2);
-    --blur-intensity: 8px; /* Zmniejszony blur dla czytelności */
+    /* --- Timing Animacji --- */
+    --anim-fast: 0.2s;
+    --anim-medium: 0.4s;
+    --anim-slow: 0.8s;
 }
 
-/* --- Animacje --- */
-@keyframes flowBackground {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* Animacja Ognistej Poświaty Inputa */
-@keyframes inputEmberGlow {
-    0% { box-shadow: 0 0 7px 2px var(--ember-glow), inset 1px 1px 3px var(--shadow-dark); }
-    50% { box-shadow: 0 0 14px 5px var(--ember-glow), inset 1px 1px 3px var(--shadow-dark); }
-    100% { box-shadow: 0 0 7px 2px var(--ember-glow), inset 1px 1px 3px var(--shadow-dark); }
-}
-
-/* Animacja aktualizacji "Flash" */
-@keyframes flashUpdate {
-    0% { transform: scale(1); opacity: 1; color: var(--ember-yellow); text-shadow: 0 0 8px var(--ember-orange); }
-    50% { transform: scale(1.1); opacity: 0.8; }
-    100% { transform: scale(1); opacity: 1; color: inherit; text-shadow: inherit; } /* Wróć do normalnego koloru/cienia */
-}
-
-
+/* --- Podstawowy Reset i Ustawienia Globalne --- */
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scrollbar-color: var(--qf-energy-primary) var(--qf-bg-dark); scrollbar-width: thin; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--qf-bg-dark); }
+::-webkit-scrollbar-thumb { background-color: var(--qf-energy-primary); border-radius: 4px; border: 2px solid var(--qf-bg-dark); }
+::-webkit-scrollbar-thumb:hover { background-color: var(--qf-energy-secondary); }
 
 body {
-    font-family: 'Nunito', sans-serif;
-    color: var(--text-light-primary); /* Domyślnie jasny tekst */
+    font-family: var(--font-primary);
+    color: var(--qf-text-subtle);
     line-height: 1.6;
     padding: 15px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Tło wodne */
-    background: linear-gradient(135deg, var(--aqua-deep-bg), var(--aqua-mid), var(--aqua-light));
-    background-size: 300% 300%;
-    animation: flowBackground 15s ease infinite;
     min-height: 100vh;
-    font-size: 16px;
     overflow-x: hidden;
+    background-color: var(--qf-bg-dark); /* Statyczne tło jako fallback */
 }
 
+/* --- Tło WebGL --- */
+#webgl-background {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; display: block; opacity: 0.8;
+}
+
+/* --- Główny Kontener --- */
 .container {
-    max-width: 700px;
-    margin: 30px auto;
-    /* Efekt szkła, ale bardziej widoczny */
-    background: var(--aqua-glass-bg); /* Przywrócono tło bezpośrednio na kontenerze */
-    backdrop-filter: blur(var(--blur-intensity));
-    -webkit-backdrop-filter: blur(var(--blur-intensity));
-    border-radius: 35px; /* Nadal okrągło */
-    padding: 30px 35px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Przywrócono poprzedni cień */
-    border: 1px solid var(--border-light);
-    position: relative; /* Nadal potrzebne dla niektórych elementów wewnątrz */
-    overflow: hidden;
+    max-width: 700px; margin: 30px auto; padding: 30px 25px; position: relative;
 }
 
 h1 {
-    text-align: center;
-    /* Gradient od ciepłego do chłodnego */
-    background: linear-gradient(to right, var(--ember-yellow), var(--aqua-highlight), var(--text-light-primary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    margin-bottom: 35px;
-    font-weight: 700;
-    font-size: 2.1em;
-    padding-bottom: 5px;
-    line-height: 1.3;
-    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtelny cień dla lepszego oddzielenia */
+    text-align: center; font-weight: 700; font-size: 2.1em; margin-bottom: 40px;
+    color: var(--qf-energy-tertiary); letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 }
 
-#denominations-list {
-    margin-bottom: 25px;
-}
+#denominations-list { margin-bottom: 30px; }
 
+/* --- Wiersze Nominałów --- */
 .denomination-row {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 5px; position: relative; gap: 15px; flex-wrap: wrap;
-    /* Lekko widoczne tło dla wiersza */
-    background-color: rgba(255, 255, 255, 0.03);
-    border-radius: 15px;
-    margin-bottom: 8px; /* Odstęp między wierszami */
-    transition: background-color 0.3s ease;
-}
-.denomination-row::after { display: none; } /* Bez linii */
-
-.denomination-row:hover {
-    background-color: rgba(255, 255, 255, 0.08);
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+    padding: 15px 0; margin-bottom: 10px; position: relative;
 }
 
 .denomination-label {
-    flex-basis: 100%; font-weight: 600;
-    color: var(--text-light-primary); /* Jasny tekst na ciemnym tle */
-    font-size: 1rem; margin-bottom: 10px;
-    padding-left: 10px; /* Wcięcie */
+    flex-basis: 100%; margin-bottom: 10px; font-weight: 400; font-size: 0.95rem;
+    color: var(--qf-text-subtle); letter-spacing: 0.5px;
 }
 
 .inputs-container {
-    flex-basis: 100%; display: flex; align-items: center;
-    gap: 12px; flex-wrap: wrap; order: 2; padding: 0 5px;
+    flex-basis: 100%; display: flex; align-items: center; gap: 15px; order: 2;
 }
 
+/* --- Style Inputów z Blaskiem SVG --- */
 .quantity-input {
-    padding: 12px 16px; border: none;
-    border-radius: 20px; /* Mniej ekstremalne zaokrąglenie */
-    text-align: right; font-family: inherit; font-size: 1rem;
-    /* Ciemniejsze tło inputa dla kontrastu */
-    background-color: rgba(0, 0, 0, 0.3);
-    color: var(--text-light-primary); /* Jasny tekst w inpucie */
-    box-shadow: inset 1px 1px 3px var(--shadow-dark);
-    transition: box-shadow 0.3s ease, background-color 0.3s ease;
-    min-height: 46px; outline: none;
+    background: transparent; border: none;
+    color: var(--qf-energy-tertiary); font-family: var(--font-mono); font-size: 1.1rem;
+    padding: 8px 5px; text-align: right; min-height: 40px; outline: none;
+    width: 80px; position: relative; z-index: 1;
+    transition: box-shadow var(--anim-fast) ease;
 }
+
 .quantity-input::placeholder {
-    color: rgba(240, 248, 255, 0.6); /* Jaśniejszy, czytelny placeholder */
-    opacity: 1;
+    color: rgba(160, 176, 192, 0.4); opacity: 1; font-family: var(--font-primary); font-weight: 300;
 }
+
+/* Pseudo-element ::after dla linii i blasku */
+.quantity-input::after {
+    content: ''; position: absolute; bottom: 0; left: 0; width: 100%;
+    height: 2px; background-color: var(--qf-energy-primary);
+    opacity: 0.3; transform: scaleX(1); transform-origin: center;
+    transition: opacity var(--anim-fast) ease-out,
+                height var(--anim-fast) ease-out,
+                filter var(--anim-fast) ease-out;
+    z-index: -1; filter: none;
+}
+
+/* Stylizacja ::after gdy input ma focus */
+.quantity-input:focus::after {
+    opacity: 0.85; height: 3px;
+    filter: url(#inputGlowEffect);
+}
+
+/* Ukrycie strzałek number input */
 .quantity-input::-webkit-outer-spin-button,
 .quantity-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.quantity-input[type=number] { -moz-appearance: textfield; }
 
-.quantity-input:focus {
-    background-color: rgba(0, 0, 0, 0.4); /* Lekko ciemniej na focusie */
-    /* Ognista poświata na focusie */
-    animation: inputEmberGlow 1.3s ease-in-out infinite alternate;
+/* Style dla inputów rulonów */
+.roll-input-container { display: flex; align-items: center; margin-left: auto; }
+.roll-label { font-size: 0.85em; color: var(--qf-text-subtle); margin-right: 8px; white-space: nowrap; }
+.roll-input { width: 60px; }
+.roll-input::after { background-color: var(--qf-energy-secondary); }
+.roll-input:focus::after { filter: url(#inputGlowEffect); }
+
+
+/* --- Separator Wierszy SVG --- */
+.row-separator {
+    position: absolute; bottom: -2px; left: 0; width: 100%; height: 3px;
+    overflow: hidden; pointer-events: none;
 }
+.row-separator svg { display: block; width: 100%; height: 100%; }
 
-.inputs-container .bill-input { width: 100%; max-width: none; flex-basis: 100%; }
 
-.roll-label {
-    font-size: 0.9em; color: var(--text-light-primary); opacity: 0.8;
-    white-space: nowrap; margin-right: auto; padding-left: 10px;
-}
-.roll-input { flex-grow: 0; flex-shrink: 0; width: 100px; max-width: 100px; }
-
+/* --- Podsumy --- */
 .subtotal {
-    flex-basis: auto; order: 1; text-align: right;
-    font-weight: 700;
-    color: var(--aqua-highlight); /* Jasny, czytelny kolor wodny */
-    font-size: 1.1rem; padding-left: 10px;
-    align-self: center; /* Wyśrodkuj pionowo z inputami */
-    margin: 0; /* Reset marginesu */
-    white-space: nowrap;
-    text-shadow: 0 0 6px rgba(162, 243, 239, 0.5); /* Subtelna poświata */
+    flex-basis: auto; order: 1; margin-left: auto; font-family: var(--font-mono);
+    font-size: 1.2rem; font-weight: 600; color: var(--qf-energy-primary);
+    text-align: right; padding-left: 15px; white-space: nowrap;
+    text-shadow: 0 0 5px rgba(80, 208, 255, 0.5);
 }
 
-.subtotal.updated, #grand-total.updated {
-    animation: flashUpdate 0.6s ease-out;
-}
-
+/* --- Sekcja Sumy Całkowitej --- */
 .total-section {
-    margin-top: 35px; padding: 25px;
-    /* Gradient od chłodnego fioletu do ciepłego pomarańczu */
-    background: linear-gradient(145deg, var(--violet-accent), var(--ember-orange));
-    border-radius: 30px; text-align: center; color: var(--text-light-primary);
-    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.25), 0 6px 20px rgba(0, 0, 0, 0.2);
-    position: relative; overflow: hidden;
+    margin-top: 40px; padding: 25px; text-align: center; position: relative;
+    border: 1px solid rgba(80, 208, 255, 0.15); border-radius: 15px;
+    background: rgba(10, 15, 32, 0.3); backdrop-filter: blur(3px);
 }
 
 .total-section h2 {
-    font-size: 0.9rem; margin-bottom: 8px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.9;
-    position: relative; z-index: 1;
-    color: var(--text-light-primary);
+    font-size: 0.8rem; font-weight: 400; color: var(--qf-text-subtle);
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; opacity: 0.8;
 }
+
 #grand-total {
-    font-size: 2.8em; font-weight: 700; display: block;
-    line-height: 1.1; margin-bottom: 5px;
-    color: var(--text-light-primary); /* Bezpośrednio jasny kolor dla czytelności */
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Mocniejszy cień dla kontrastu */
-    word-break: break-all; position: relative; z-index: 1;
+    font-family: var(--font-mono); font-size: 2.8em; font-weight: 700;
+    color: var(--qf-energy-tertiary); display: block; line-height: 1.1;
+    word-break: break-all; margin-bottom: 5px;
+    text-shadow: 0 0 8px rgba(80, 208, 255, 0.7), 0 0 15px rgba(80, 208, 255, 0.5), 0 0 25px rgba(80, 208, 255, 0.3);
+    animation: pulseGlow var(--anim-slow) ease-in-out infinite alternate;
 }
 
-.withdrawal-section { margin-top: 30px; margin-bottom: 30px; text-align: center; }
+@keyframes pulseGlow {
+    from { text-shadow: 0 0 8px rgba(80, 208, 255, 0.6), 0 0 15px rgba(80, 208, 255, 0.4), 0 0 25px rgba(80, 208, 255, 0.2); }
+    to { text-shadow: 0 0 10px rgba(80, 208, 255, 0.8), 0 0 20px rgba(80, 208, 255, 0.6), 0 0 35px rgba(80, 208, 255, 0.4); }
+}
 
-/* Wyniki wypłaty - jasne tło, ciemny tekst */
+/* --- Przyciski z Wewnętrzną Animacją Energii --- */
+.withdrawal-section { margin: 30px 0; text-align: center; }
+
+#calculate-100-button,
+#reset-button {
+    display: block; width: 100%; padding: 15px 20px; margin-bottom: 20px;
+    border: 1px solid var(--qf-energy-primary); border-radius: 50px;
+    background: transparent; color: var(--qf-energy-primary);
+    font-family: var(--font-primary); font-weight: 600; font-size: 1rem;
+    text-transform: uppercase; letter-spacing: 1.5px; cursor: pointer; outline: none;
+    position: relative; overflow: hidden; transition: all var(--anim-fast) ease-out;
+    box-shadow: 0 0 8px -4px var(--qf-energy-primary);
+    z-index: 1;
+}
+
+#calculate-100-button {
+    border-color: var(--qf-energy-secondary); color: var(--qf-energy-secondary);
+    box-shadow: 0 0 8px -4px var(--qf-energy-secondary); font-size: 1.1em;
+}
+
+/* Pseudo-element dla animacji wewnętrznej energii */
+#calculate-100-button::before,
+#reset-button::before {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: 300%; height: 300%;
+    background: radial-gradient(circle,
+        rgba(80, 208, 255, 0.3) 0%,
+        rgba(80, 208, 255, 0.15) 20%,
+        rgba(80, 208, 255, 0) 60%
+    );
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: -1; opacity: 0;
+    transition: transform var(--anim-slow) cubic-bezier(0.19, 1, 0.22, 1),
+                opacity var(--anim-slow) cubic-bezier(0.19, 1, 0.22, 1);
+    animation: rotateEnergy 10s linear infinite paused;
+}
+
+/* Dostosowanie koloru gradientu dla przycisku $100 */
+#calculate-100-button::before {
+    background: radial-gradient(circle,
+        rgba(255, 215, 0, 0.3) 0%,
+        rgba(255, 215, 0, 0.15) 20%,
+        rgba(255, 215, 0, 0) 60%
+    );
+}
+
+/* Animacja rotacji pseudo-elementu */
+@keyframes rotateEnergy {
+    from { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    to { transform: translate(-50%, -50%) scale(1) rotate(360deg); }
+}
+
+/* Efekty na :hover */
+#calculate-100-button:hover,
+#reset-button:hover {
+    color: var(--qf-energy-tertiary);
+    border-color: var(--qf-energy-primary);
+    box-shadow: 0 0 12px -2px var(--qf-energy-primary);
+    transform: translateY(-2px);
+}
+#calculate-100-button:hover {
+     color: var(--qf-energy-tertiary);
+     border-color: var(--qf-energy-secondary);
+     box-shadow: 0 0 12px -2px var(--qf-energy-secondary);
+}
+
+/* Aktywacja i animacja pseudo-elementu na :hover */
+#calculate-100-button:hover::before,
+#reset-button:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    transition-duration: var(--anim-medium);
+    animation-play-state: running;
+}
+
+/* Efekty na :active (wciśnięcie) */
+#calculate-100-button:active,
+#reset-button:active {
+    box-shadow: 0 0 5px 0px var(--qf-energy-primary);
+    transform: translateY(1px);
+}
+#calculate-100-button:active {
+     box-shadow: 0 0 5px 0px var(--qf-energy-secondary);
+}
+
+/* Modyfikacja pseudo-elementu na :active */
+#calculate-100-button:active::before,
+#reset-button:active::before {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.9;
+    transition-duration: 0.05s;
+}
+
+/* --- Wyniki Wypłaty --- */
 .withdrawal-results-display {
-    padding: 20px 25px;
-    background-color: var(--bg-light-contrast); /* Jasne, prawie nieprzezroczyste tło */
-    color: var(--text-dark-accent); /* Ciemny tekst dla czytelności */
-    border-radius: 20px;
-    text-align: left; font-size: 0.95rem;
-    line-height: 1.6; margin-top: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.05); /* Subtelna ramka */
-
-    opacity: 0; transform: translateY(10px); max-height: 0;
-    overflow: hidden;
-    transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease,
-                margin-top 0.35s ease, padding 0.35s ease, border-width 0.35s ease,
-                box-shadow 0.35s ease;
+    padding: 20px 25px; background-color: rgba(10, 15, 32, 0.5);
+    color: var(--qf-text-subtle); border-radius: 10px;
+    border: 1px solid rgba(80, 208, 255, 0.2); text-align: left;
+    font-size: 0.95rem; line-height: 1.6; margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    opacity: 0; transform: translateY(10px); max-height: 0; overflow: hidden;
+    transition: opacity var(--anim-medium) ease, transform var(--anim-medium) ease, max-height var(--anim-medium) ease,
+                margin-top var(--anim-medium) ease, padding var(--anim-medium) ease, border-width var(--anim-medium) ease;
 }
 .withdrawal-results-display.visible {
     opacity: 1; transform: translateY(0); max-height: 1000px;
     margin-top: 20px; padding: 20px 25px; border-width: 1px;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
 }
 .withdrawal-results-display:not(.visible) {
      margin-top: 0; padding-top: 0; padding-bottom: 0; border-width: 0;
-     box-shadow: none;
 }
-
 .withdrawal-results-display h3 {
-    margin-top: 0; margin-bottom: 12px; font-size: 1.1rem;
-    font-weight: 700; color: var(--deep-violet); /* Akcent fioletowy */
+    margin-top: 0; margin-bottom: 12px; font-size: 1.1rem; font-weight: 600;
+    color: var(--qf-energy-secondary); text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
 }
-.withdrawal-results-display p { margin-bottom: 8px; color: var(--text-dark-accent); }
+.withdrawal-results-display p { margin-bottom: 8px; }
 .withdrawal-results-display p:last-child { margin-bottom: 0; }
+.withdrawal-results-display strong { color: var(--qf-energy-tertiary); font-weight: 600; }
 
-/* Przyciski - ognisty dla akcji, fioletowy dla resetu */
-#calculate-100-button,
-#reset-button {
-    display: block; width: 100%; padding: 15px 20px; margin-bottom: 20px;
-    border: none; border-radius: 50px; font-weight: 700; cursor: pointer;
-    text-transform: uppercase; letter-spacing: 1.2px;
-    color: var(--text-light-primary);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 5px 15px var(--shadow-dark); /* Subtelniejszy cień */
-    transition: all 0.2s ease-out; /* Prostszy transition */
-    min-height: 50px;
-    position: relative;
-    overflow: hidden;
-}
-
-#calculate-100-button {
-    /* Ognisty gradient */
-    background: linear-gradient(135deg, var(--ember-orange), var(--ember-red));
-    box-shadow: 0 5px 15px var(--ember-shadow); /* Cień w kolorze ognia */
-    font-size: 1.1em;
-}
-#reset-button {
-     /* Fioletowy gradient dla kontrastu */
-     background: linear-gradient(135deg, var(--violet-accent), var(--deep-violet));
-     box-shadow: 0 5px 15px rgba(74, 26, 156, 0.4); /* Cień fioletowy */
-     font-size: 1rem;
-     margin-bottom: 0;
-}
-
-#calculate-100-button:hover,
-#reset-button:hover {
-    transform: translateY(-2px) scale(1.01); /* Mniejsze uniesienie */
-    filter: brightness(1.15); /* Rozjaśnienie na hover */
-    box-shadow: 0 8px 20px var(--ember-shadow); /* Intensywniejszy cień */
-}
-#reset-button:hover {
-    box-shadow: 0 8px 20px rgba(74, 26, 156, 0.5);
-}
-
-#calculate-100-button:active,
-#reset-button:active {
-    transform: translateY(1px) scale(0.98); /* Mniejsze wciśnięcie */
-    filter: brightness(0.9); /* Przyciemnienie na active */
-    box-shadow: 0 2px 8px var(--ember-shadow);
-}
-#reset-button:active {
-    box-shadow: 0 2px 8px rgba(74, 26, 156, 0.4);
-}
-
-/* Dostosowanie do szerszych ekranów */
+/* --- Media Queries --- */
 @media (min-width: 600px) {
     body { padding: 30px; }
-    .container { padding: 40px 50px; border-radius: 40px; margin: 40px auto; }
-    h1 { font-size: 2.5em; margin-bottom: 40px; }
-
-    .denomination-row { flex-wrap: nowrap; gap: 20px; padding: 15px 15px; margin-bottom: 10px; }
+    .container { padding: 40px 50px; margin: 40px auto; }
+    h1 { font-size: 2.5em; margin-bottom: 50px; }
+    .denomination-row { flex-wrap: nowrap; gap: 20px; padding: 15px 10px; margin-bottom: 15px; }
     .denomination-label { flex-basis: 25%; text-align: left; margin-bottom: 0; padding-right: 5px; }
-    .inputs-container { flex-basis: 50%; order: 0; flex-wrap: nowrap; margin-top: 0; }
+    .inputs-container { flex-basis: auto; order: 0; flex-wrap: nowrap; margin-top: 0; width: auto; }
     .quantity-input { max-width: 110px; }
-    .inputs-container .bill-input { flex-grow: 1; }
-    .roll-input-container { flex-basis: auto; flex-wrap: nowrap; margin-top: 0; }
-    .roll-input { width: 100px; }
-    .subtotal { flex-basis: 20%; order: 0; align-self: center; margin-top: 0; padding-left: 5px; min-width: 100px; font-size: 1.15rem; }
-
-    #grand-total { font-size: 3.2em; }
+    .roll-input-container { /* Zostaje po prawej */ }
+    .subtotal { flex-basis: 20%; order: 0; align-self: center; margin-top: 0; padding-left: 5px; min-width: 120px; font-size: 1.25rem; }
+    #grand-total { font-size: 3.5em; }
     .withdrawal-results-display { font-size: 1rem; }
+    .ripple {
+        position: absolute; /* Pozycjonowany względem przycisku */
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.4); /* Półprzezroczysty biały - kolor fali */
+        transform: scale(0); /* Zaczyna schowany */
+        animation: ripple-effect var(--anim-medium) ease-out; /* Animacja */
+        pointer-events: none; /* Nie blokuje kliknięć */
+        z-index: 0; /* Pod tekstem przycisku, ale nad ::before */
+    }
+    
+    /* Dostosowanie koloru fali dla przycisku $100 */
+    #calculate-100-button .ripple {
+        background-color: rgba(255, 215, 0, 0.4); /* Półprzezroczysty złoty */
+    }
+    
+    
+    /* Animacja fali */
+    @keyframes ripple-effect {
+        to {
+            transform: scale(4); /* Rozszerza się poza przycisk */
+            opacity: 0;        /* Zanika */
+        }
+    }
+    
+    /* --- KONIEC DODANYCH STYLÓW --- */
 }
+
+/* --- END OF FILE style.css --- */

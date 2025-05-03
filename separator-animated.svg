@@ -1,0 +1,59 @@
+<!-- START OF FILE separator-animated.svg -->
+<svg width="100%" height="3px" viewBox="0 0 100 3" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Definicja gradientu liniowego, który będzie animowany -->
+    <!-- gradientUnits="userSpaceOnUse" jest ważne, aby animacja transformacji działała poprawnie względem viewBox -->
+    <linearGradient id="energyFlowGradient" gradientUnits="userSpaceOnUse" x1="-50" y1="0" x2="50" y2="0">
+      <!-- Stop: Zaczyna się przezroczysty -->
+      <stop offset="0%" stop-color="#50d0ff" stop-opacity="0" />
+      <!-- Stop: Przejście do pełnej widoczności -->
+      <stop offset="45%" stop-color="#50d0ff" stop-opacity="1" />
+      <!-- Stop: Krótki odcinek pełnej widoczności -->
+      <stop offset="55%" stop-color="#50d0ff" stop-opacity="1" />
+      <!-- Stop: Przejście z powrotem do przezroczystości -->
+      <stop offset="100%" stop-color="#50d0ff" stop-opacity="0" />
+
+      <!-- Animacja transformacji: przesuwa gradient w poziomie -->
+      <!-- 'from="0"' i 'to="150"' oznacza przesunięcie o 150 jednostek viewBox -->
+      <!-- 'dur="2.5s"' kontroluje prędkość przepływu -->
+      <animateTransform
+          attributeName="gradientTransform"
+          attributeType="XML"
+          type="translate"
+          from="0 0"
+          to="150 0"
+          dur="2.5s"
+          repeatCount="indefinite" />
+    </linearGradient>
+
+     <!-- Opcjonalnie: Definicja lekkiego blasku dla linii tła -->
+     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="0.5" result="coloredBlur"/>
+        <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+    </filter>
+
+  </defs>
+
+  <!-- Linia tła: Cienka, lekko widoczna, statyczna linia pod spodem -->
+  <line
+      x1="0" y1="1.5"
+      x2="100" y2="1.5"
+      stroke-width="0.5"
+      stroke="#50d0ff"
+      stroke-opacity="0.15"
+      />
+      <!-- filter="url(#glow)" <== Można dodać, jeśli chcemy lekki blask tła -->
+
+
+  <!-- Główna linia: Używa animowanego gradientu jako koloru kreski -->
+  <line
+      x1="0" y1="1.5"
+      x2="100" y2="1.5"
+      stroke-width="1.5"
+      stroke="url(#energyFlowGradient)" />
+
+</svg>
+<!-- END OF FILE separator-animated.svg -->
