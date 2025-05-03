@@ -1,3 +1,7 @@
+const calculateWithdrawal = () => {
+    console.log("--- Przycisk $100 KLIKNIĘTY - start funkcji calculateWithdrawal ---"); // <--- DODAJ TEN LOG
+    // ... reszta kodu funkcji ...
+};
 document.addEventListener('DOMContentLoaded', () => {
     // ... (stałe na początku bez zmian: denominationsList, grandTotalElement, etc.) ...
     const denominationsList = document.getElementById('denominations-list');
