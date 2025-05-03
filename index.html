@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Licznik Gotówki</title>
+    <title>Licznik Gotówki USD</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Link do Google Fonts bez &display=swap -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Link do Google Fonts (Nunito) -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#007bff"/>
+    <meta name="theme-color" content="#1a7a8c"/> <!-- Kolor z palety Aqua -->
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 </head>
 <body>
@@ -29,24 +29,23 @@
         </div>
 
         <div class="withdrawal-section">
-            <button id="calculate-100-button"><span>$100</span></button>
+             <button id="calculate-100-button">$100</button>
              <div id="withdrawal-results" class="withdrawal-results-display">
                  <!-- Wyniki wypłaty pojawią się tutaj -->
              </div>
         </div>
 
-        <button id="reset-button"><span>Wyczyść wszystko</span></button>
+        <button id="reset-button">Wyczyść wszystko</button>
     </div>
 
     <script src="script.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                // ZMIANA TUTAJ: Użyj './sw.js'
                 navigator.serviceWorker.register('./sw.js')
                     .then(registration => {
                         console.log('ServiceWorker zarejestrowany: ', registration);
-                        console.log('Scope:', registration.scope); // Dodajmy log scope'u
+                        console.log('Scope:', registration.scope);
                     })
                     .catch(registrationError => {
                         console.error('Rejestracja ServiceWorker nie powiodła się: ', registrationError);
@@ -55,4 +54,4 @@
         }
     </script>
 </body>
-</html>     
+</html>

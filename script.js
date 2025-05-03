@@ -1,14 +1,12 @@
+; // Self-invoking function or module pattern could be used here
 
-;
 document.addEventListener('DOMContentLoaded', () => {
-    // ... (stałe na początku bez zmian: denominationsList, grandTotalElement, etc.) ...
     const denominationsList = document.getElementById('denominations-list');
     const grandTotalElement = document.getElementById('grand-total');
     const resetButton = document.getElementById('reset-button');
     const calculate100Button = document.getElementById('calculate-100-button');
     const withdrawalResultsElement = document.getElementById('withdrawal-results');
 
-    // Definicja nominałów + informacje o RULONACH (bez zmian)
     const denominations = [
         { label: '1 Cent', value: 0.01, valueInCents: 1, id: 'penny', rollValueInCents: 50, rollInputId: 'rolls-penny' },
         { label: '5 Centów', value: 0.05, valueInCents: 5, id: 'nickel', rollValueInCents: 200, rollInputId: 'rolls-nickel' },
@@ -33,25 +31,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Funkcja pomocnicza do animacji "update"
     const triggerUpdateAnimation = (element) => {
+        element.classList.remove('updated');
+        void element.offsetWidth; // Trigger reflow
         element.classList.add('updated');
-        // Usuń klasę po zakończeniu animacji (czas musi pasować do CSS)
-        setTimeout(() => {
-            element.classList.remove('updated');
-        }, 400); // 400ms to czas animacji w CSS
+        // Usuń klasę po zakończeniu animacji (czas musi pasować do CSS), jeśli animacja sama jej nie usuwa
+        // setTimeout(() => { element.classList.remove('updated'); }, 600); // Czas animacji flashUpdate
     };
 
-    // ZMODYFIKOWANA Funkcja do obliczania sumy całkowitej
+    // Funkcja do obliczania sumy całkowitej
     const calculateTotal = () => {
         let calculatedTotalInCents = 0;
         let calculatedRollsTotalInCents = 0;
 
-        const previousGrandTotalText = grandTotalElement.textContent; // Zapamiętaj poprzednią wartość
+        const previousGrandTotalText = grandTotalElement.textContent;
 
         denominations.forEach(denom => {
             const inputElement = document.getElementById(`input-${denom.id}`);
             const subtotalElement = document.getElementById(`subtotal-${denom.id}`);
-            const previousSubtotalText = subtotalElement.textContent; // Zapamiętaj poprzednią wartość
-            let quantity = parseInt(inputElement.value) || 0;
+            const previousSubtotalText = subtotalElement?.textContent || '';
+            let quantity = parseInt(inputElement?.value) || 0;
              if (quantity < 0) { inputElement.value = 0; quantity = 0; }
 
             const looseSubtotalInCents = quantity * denom.valueInCents;
@@ -59,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (denom.rollInputId) {
                 const rollInputElement = document.getElementById(denom.rollInputId);
-                let rollQuantity = parseInt(rollInputElement.value) || 0;
+                let rollQuantity = parseInt(rollInputElement?.value) || 0;
                  if (rollQuantity < 0) { rollInputElement.value = 0; rollQuantity = 0; }
                 rollSubtotalInCents = rollQuantity * denom.rollValueInCents;
                 calculatedRollsTotalInCents += rollSubtotalInCents;
@@ -68,219 +66,194 @@ document.addEventListener('DOMContentLoaded', () => {
             const totalRowSubtotalInCents = looseSubtotalInCents + rollSubtotalInCents;
             calculatedTotalInCents += totalRowSubtotalInCents;
 
-            // Wyświetl subtotal dla wiersza i animuj, jeśli się zmienił
-            const newSubtotalText = formatCurrency(totalRowSubtotalInCents / 100);
-            if (newSubtotalText !== previousSubtotalText) {
-                 subtotalElement.textContent = newSubtotalText;
-                 triggerUpdateAnimation(subtotalElement); // Uruchom animację
+            if (subtotalElement) {
+                const newSubtotalText = formatCurrency(totalRowSubtotalInCents / 100);
+                if (newSubtotalText !== previousSubtotalText) {
+                     subtotalElement.textContent = newSubtotalText;
+                     triggerUpdateAnimation(subtotalElement);
+                }
             }
         });
 
         currentGrandTotalInCents = calculatedTotalInCents;
         currentFixedRollsTotalInCents = calculatedRollsTotalInCents;
 
-        // Wyświetl sumę całkowitą i animuj, jeśli się zmieniła
         const newGrandTotalText = formatCurrency(currentGrandTotalInCents / 100);
         if (newGrandTotalText !== previousGrandTotalText) {
              grandTotalElement.textContent = newGrandTotalText;
-             triggerUpdateAnimation(grandTotalElement); // Uruchom animację
+             triggerUpdateAnimation(grandTotalElement);
         }
 
-        hideWithdrawalResults(); // Nadal ukrywamy wyniki, jeśli coś się zmieniło
+        hideWithdrawalResults();
     };
 
-    // Funkcja obliczania wypłaty (USUNIĘTO PUSTĄ DEFINICJĘ TUTAJ)
-    // Logika bez zmian, tylko sposób wyświetlania
+    // Funkcja obliczania wypłaty
     const calculateWithdrawal = () => {
-        // ... (cała logika obliczeń calculateWithdrawal pozostaje BEZ ZMIAN) ...
-        const targetGrandTotalInCents = 10000; // $100 w centach
-        calculateTotal(); // Upewnij się, że suma jest aktualna
+        const targetGrandTotalInCents = 10000;
+        calculateTotal(); // Upewnij się, że dane są aktualne
 
-        // Sprawdzenie, czy suma całkowita nie przekracza celu
         if (currentGrandTotalInCents <= targetGrandTotalInCents) {
             displayWithdrawalResults("<h3>Informacja</h3><p>Suma całkowita wynosi $100 lub mniej. Nie trzeba nic wyjmować.</p>");
             return;
         }
 
-        // Sprawdzenie, czy same rulony nie przekraczają celu
         if (currentFixedRollsTotalInCents > targetGrandTotalInCents) {
              displayWithdrawalResults(`<h3>Problem</h3><p>Wartość samych rulonów (${formatCurrency(currentFixedRollsTotalInCents / 100)}) przekracza $100. Nie można osiągnąć celu bez otwierania rulonów.</p>`);
              return;
         }
 
-        // Sprawdzenie, czy są tylko rulony i przekraczają cel
-         if (currentFixedRollsTotalInCents === currentGrandTotalInCents && currentGrandTotalInCents > targetGrandTotalInCents) {
+        if (currentFixedRollsTotalInCents === currentGrandTotalInCents && currentGrandTotalInCents > targetGrandTotalInCents) {
               displayWithdrawalResults(`<h3>Problem</h3><p>Masz tylko rulony o wartości ${formatCurrency(currentFixedRollsTotalInCents / 100)}, co jest więcej niż $100. Nie można osiągnąć celu.</p>`);
               return;
          }
 
-        // Obliczenie, ile trzeba usunąć z luźnych środków
         const currentRemovableTotalInCents = currentGrandTotalInCents - currentFixedRollsTotalInCents;
-        const targetRemovableValue = targetGrandTotalInCents - currentFixedRollsTotalInCents; // Ile luźnych środków ma zostać
+        const targetRemovableValue = targetGrandTotalInCents - currentFixedRollsTotalInCents;
 
-         // Dodatkowy warunek bezpieczeństwa, chociaż częściowo pokryty przez sprawdzenie samych rulonów
          if (targetRemovableValue < 0) {
-              // Ten przypadek teoretycznie nie powinien wystąpić, jeśli `currentFixedRollsTotalInCents <= targetGrandTotalInCents`
-              displayWithdrawalResults(`<h3>Problem</h3><p>Wartość samych rulonów (${formatCurrency(currentFixedRollsTotalInCents / 100)}) jest tak duża, że nie da się zejść do $100 usuwając tylko luźne środki.</p>`);
+             displayWithdrawalResults(`<h3>Problem</h3><p>Wartość samych rulonów (${formatCurrency(currentFixedRollsTotalInCents / 100)}) jest tak duża, że nie da się zejść do $100 usuwając tylko luźne środki.</p>`);
              return;
          }
 
         let amountToRemoveFromRemovables = currentRemovableTotalInCents - targetRemovableValue;
-        amountToRemoveFromRemovables = Math.max(0, Math.round(amountToRemoveFromRemovables)); // Upewnij się, że nie jest ujemna i zaokrąglij
+        amountToRemoveFromRemovables = Math.max(0, Math.round(amountToRemoveFromRemovables));
 
-        // Jeśli nie trzeba nic usuwać (np. luźne środki + rulony <= 100$)
         if (amountToRemoveFromRemovables <= 0) {
-             // Ten warunek może być bardziej precyzyjny, ale ogólnie działa
-             displayWithdrawalResults("<h3>Informacja</h3><p>Nie trzeba usuwać żadnych luźnych środków, aby pozostało $100 (lub mniej, jeśli suma początkowa była niższa).</p>");
+             displayWithdrawalResults("<h3>Informacja</h3><p>Nie trzeba usuwać żadnych luźnych środków, aby pozostało $100 (lub mniej).</p>");
              return;
         }
 
-
-        // Algorytm zachłanny do znalezienia nominałów do usunięcia (tylko z luźnych)
         const denominationsToRemove = {};
-        let remainingAmountToRemove = amountToRemoveFromRemovables; // Użyj nowej zmiennej w pętli
+        let remainingAmountToRemove = amountToRemoveFromRemovables;
+        let actualRemovedTotalCents = 0;
 
         denominationsSortedDesc.forEach(denom => {
-            if (remainingAmountToRemove <= 0) return; // Przestań, jeśli już usunęliśmy wystarczająco
+            if (remainingAmountToRemove <= 0) return;
 
             const inputElement = document.getElementById(`input-${denom.id}`);
-            const currentLooseQuantity = parseInt(inputElement.value) || 0;
+            const currentLooseQuantity = parseInt(inputElement?.value) || 0;
 
-            // Sprawdź tylko luźne nominały (nie rulony) i czy są dostępne
-            if (currentLooseQuantity > 0 && denom.valueInCents > 0 && !denom.rollInputId) { // Sprawdzajmy też czy to nie moneta/banknot z rulonem - chociaż inputy są osobne
-                const maxUnitsNeeded = Math.floor(remainingAmountToRemove / denom.valueInCents);
-                const unitsToRemove = Math.min(maxUnitsNeeded, currentLooseQuantity);
+            if (currentLooseQuantity > 0 && denom.valueInCents > 0) {
+                const maxUnitsPossible = Math.floor(remainingAmountToRemove / denom.valueInCents);
+                const unitsToRemove = Math.min(maxUnitsPossible, currentLooseQuantity);
 
                 if (unitsToRemove > 0) {
-                    denominationsToRemove[denom.id] = unitsToRemove;
-                    remainingAmountToRemove -= unitsToRemove * denom.valueInCents;
-                    remainingAmountToRemove = Math.round(remainingAmountToRemove); // Zaokrąglaj po każdej operacji
+                    denominationsToRemove[denom.id] = (denominationsToRemove[denom.id] || 0) + unitsToRemove;
+                    const removedValue = unitsToRemove * denom.valueInCents;
+                    remainingAmountToRemove -= removedValue;
+                    actualRemovedTotalCents += removedValue;
+                    remainingAmountToRemove = Math.round(remainingAmountToRemove);
                 }
-            } else if (currentLooseQuantity > 0 && denom.valueInCents > 0 && denom.rollInputId){
-                 // Obsługa luźnych monet (nie z rolek)
-                 const maxUnitsNeeded = Math.floor(remainingAmountToRemove / denom.valueInCents);
-                 const unitsToRemove = Math.min(maxUnitsNeeded, currentLooseQuantity); // Używamy `currentLooseQuantity` z inputa sztuk
-
-                 if (unitsToRemove > 0) {
-                     denominationsToRemove[denom.id] = unitsToRemove;
-                     remainingAmountToRemove -= unitsToRemove * denom.valueInCents;
-                     remainingAmountToRemove = Math.round(remainingAmountToRemove);
-                 }
             }
         });
 
-        // Przygotowanie tekstu wyniku
-        let resultText = `<h3>Aby zostało ${formatCurrency(targetGrandTotalInCents / 100)} (nie ruszając rulonów), wyjmij:</h3>`;
+        let resultText = `<h3>Aby zostało ~${formatCurrency(targetGrandTotalInCents / 100)} (nie ruszając rulonów), wyjmij:</h3>`;
         let itemsFound = false;
-        let totalRemovedValueCheck = 0;
 
-        denominations.forEach(denom => { // Iteruj w oryginalnej kolejności dla wyświetlania
+        denominations.forEach(denom => {
             if (denominationsToRemove[denom.id] && denominationsToRemove[denom.id] > 0) {
                 itemsFound = true;
                 const count = denominationsToRemove[denom.id];
                 resultText += `<p>${count} x ${denom.label} (luźne)</p>`;
-                totalRemovedValueCheck += count * denom.valueInCents;
             }
         });
 
-        // Obsługa sytuacji, gdy nie znaleziono nic do usunięcia, ale matematycznie powinno się coś usunąć
-        // Lub gdy algorytm nie był w stanie dokładnie dobrać kwoty (np. przez zaokrąglenia lub brak odpowiednich nominałów)
         if (!itemsFound && amountToRemoveFromRemovables > 0) {
-            // Sprawdźmy, czy po prostu nie ma odpowiednich luźnych nominałów
-            if (currentRemovableTotalInCents > targetRemovableValue) {
-                 console.warn("Nie można dobrać dokładnie nominałów do usunięcia z dostępnych luźnych środków.", {
-                     amountToRemoveTarget: amountToRemoveFromRemovables,
-                     currentRemovable: currentRemovableTotalInCents,
-                     targetRemovable: targetRemovableValue
-                 });
-                 // Można dodać bardziej szczegółowy komunikat dla użytkownika
-                 resultText = `<h3>Problem</h3><p>Nie udało się dobrać luźnych nominałów, aby dokładnie uzyskać ${formatCurrency(targetGrandTotalInCents / 100)}. Pozostanie najbliższa możliwa kwota powyżej celu, nie ruszając rulonów.</p>`;
-             } else {
-                 // Ten przypadek teoretycznie nie powinien wystąpić, jeśli amountToRemoveFromRemovables > 0
-                 resultText = "<h3>Informacja</h3><p>Nie trzeba usuwać żadnych luźnych środków.</p>";
-             }
+             resultText = `<h3>Problem</h3><p>Nie można dobrać luźnych nominałów, aby dokładnie usunąć ${formatCurrency(amountToRemoveFromRemovables / 100)}. Sprawdź dostępne luźne nominały.</p>`;
         } else if (!itemsFound) {
-            // Jeśli amountToRemoveFromRemovables było 0 od początku
-            resultText = "<h3>Informacja</h3><p>Nie trzeba usuwać żadnych luźnych środków.</p>";
+             resultText = "<h3>Informacja</h3><p>Nie trzeba usuwać żadnych luźnych środków.</p>";
         } else {
-             // Jeśli znaleziono nominały do usunięcia
-             const remainingTotal = currentGrandTotalInCents - totalRemovedValueCheck;
-             resultText += `<p style="margin-top: 10px; font-weight: bold;">Pozostanie: ${formatCurrency(remainingTotal / 100)}</p>`; // Pokaż realną pozostałą kwotę
+             const finalTotal = currentGrandTotalInCents - actualRemovedTotalCents;
+             resultText += `<p style="margin-top: 10px; font-weight: bold;">Pozostanie: ${formatCurrency(finalTotal / 100)}</p>`;
              if (currentFixedRollsTotalInCents > 0) {
                  resultText += `<p style="font-size: 0.85em; opacity: 0.9;">(W tym ${formatCurrency(currentFixedRollsTotalInCents / 100)} w nienaruszonych rulonach)</p>`;
              }
-
-             // Ostrzeżenie, jeśli obliczona suma do usunięcia różni się od docelowej (np. przez brak nominałów)
-             if (Math.round(totalRemovedValueCheck) !== Math.round(amountToRemoveFromRemovables)) {
-                 console.warn("Kwota faktycznie usunięta różni się od docelowej kwoty do usunięcia.", {
-                     calculatedToRemove: totalRemovedValueCheck,
-                     targetToRemove: amountToRemoveFromRemovables
-                 });
-                  resultText += `<p style="font-size: 0.8em; opacity: 0.8; margin-top: 5px;">Uwaga: Nie można było dobrać dokładnie ${formatCurrency(amountToRemoveFromRemovables / 100)} z dostępnych luźnych nominałów.</p>`;
+             if (Math.abs(finalTotal - targetGrandTotalInCents) > 0) {
+                 if (Math.round(actualRemovedTotalCents) !== Math.round(amountToRemoveFromRemovables)) {
+                     console.warn("Actual removed amount differs from target removal amount due to rounding/denominations.", { actual: actualRemovedTotalCents, target: amountToRemoveFromRemovables });
+                      resultText += `<p style="font-size: 0.8em; opacity: 0.8; margin-top: 5px;">Uwaga: Nie można było dobrać dokładnie ${formatCurrency(amountToRemoveFromRemovables / 100)} z dostępnych luźnych nominałów.</p>`;
+                 }
              }
         }
 
-        // Wyświetl wyniki
         displayWithdrawalResults(resultText);
     };
 
-
-
-    // ZMODYFIKOWANA Funkcja do wyświetlania wyników wypłaty (używa klasy)
+    // Funkcja do wyświetlania wyników wypłaty
     const displayWithdrawalResults = (htmlContent) => {
-        withdrawalResultsElement.innerHTML = htmlContent; // Najpierw ustaw treść
-        withdrawalResultsElement.classList.add('visible'); // Potem dodaj klasę, aby uruchomić animację wejścia
+        if (!withdrawalResultsElement) return;
+        withdrawalResultsElement.innerHTML = htmlContent;
+        withdrawalResultsElement.classList.add('visible');
     };
 
-     // ZMODYFIKOWANA Funkcja do ukrywania wyników wypłaty (używa klasy)
+     // Funkcja do ukrywania wyników wypłaty
      const hideWithdrawalResults = () => {
-         withdrawalResultsElement.classList.remove('visible'); // Usuń klasę, aby uruchomić animację wyjścia
-         // Opcjonalnie można wyczyścić innerHTML po czasie animacji, ale często nie jest to konieczne
-         // setTimeout(() => { if (!withdrawalResultsElement.classList.contains('visible')) withdrawalResultsElement.innerHTML = ''; }, 400); // 400ms pasuje do max-height transition
+         if (!withdrawalResultsElement) return;
+         withdrawalResultsElement.classList.remove('visible');
      };
 
-
-    // Tworzenie wierszy dla każdego nominału (logika bez zmian od poprzedniej wersji)
+    // Tworzenie wierszy dla każdego nominału
     denominations.forEach(denom => {
         const row = document.createElement('div');
         row.classList.add('denomination-row');
+
         const label = document.createElement('span');
         label.classList.add('denomination-label');
         label.textContent = denom.label;
         row.appendChild(label);
+
         const inputsContainer = document.createElement('div');
         inputsContainer.classList.add('inputs-container');
+
         const input = document.createElement('input');
         input.classList.add('quantity-input');
-        input.setAttribute('type', 'number'); input.setAttribute('id', `input-${denom.id}`);
-        input.setAttribute('min', '0'); input.setAttribute('placeholder', 'Sztuki');
-        input.setAttribute('inputmode', 'numeric'); input.setAttribute('pattern', '[0-9]*');
+        input.setAttribute('type', 'number');
+        input.setAttribute('id', `input-${denom.id}`);
+        input.setAttribute('min', '0');
+        input.setAttribute('placeholder', 'Sztuki');
+        input.setAttribute('inputmode', 'numeric');
+        input.setAttribute('pattern', '[0-9]*');
         input.addEventListener('input', calculateTotal);
-        if (!denom.rollInputId) { input.classList.add('bill-input'); }
+        if (!denom.rollInputId) {
+            input.classList.add('bill-input');
+        }
         inputsContainer.appendChild(input);
+
         if (denom.rollInputId) {
             const rollInputContainer = document.createElement('span');
-            rollInputContainer.classList.add('roll-input-container');
+            rollInputContainer.classList.add('roll-input-container'); // Dodano klasę dla styli w media query
+
             const rollLabel = document.createElement('span');
-            rollLabel.textContent = 'Rulony:'; rollLabel.classList.add('roll-label');
+            rollLabel.textContent = 'Rulony:';
+            rollLabel.classList.add('roll-label');
+
             const rollInput = document.createElement('input');
             rollInput.classList.add('roll-input', 'quantity-input');
-            rollInput.setAttribute('type', 'number'); rollInput.setAttribute('id', denom.rollInputId);
-            rollInput.setAttribute('min', '0'); rollInput.setAttribute('value', '0');
-            rollInput.setAttribute('placeholder', 'Ilość'); rollInput.setAttribute('inputmode', 'numeric');
-            rollInput.setAttribute('pattern', '[0-9]*'); rollInput.addEventListener('input', calculateTotal);
-            rollInputContainer.appendChild(rollLabel); rollInputContainer.appendChild(rollInput);
+            rollInput.setAttribute('type', 'number');
+            rollInput.setAttribute('id', denom.rollInputId);
+            rollInput.setAttribute('min', '0');
+            rollInput.setAttribute('value', '0');
+            rollInput.setAttribute('placeholder', 'Ilość');
+            rollInput.setAttribute('inputmode', 'numeric');
+            rollInput.setAttribute('pattern', '[0-9]*');
+            rollInput.addEventListener('input', calculateTotal);
+
+            rollInputContainer.appendChild(rollLabel);
+            rollInputContainer.appendChild(rollInput);
             inputsContainer.appendChild(rollInputContainer);
         }
         row.appendChild(inputsContainer);
+
         const subtotalSpan = document.createElement('span');
-        subtotalSpan.classList.add('subtotal'); subtotalSpan.setAttribute('id', `subtotal-${denom.id}`);
+        subtotalSpan.classList.add('subtotal');
+        subtotalSpan.setAttribute('id', `subtotal-${denom.id}`);
         subtotalSpan.textContent = formatCurrency(0);
         row.appendChild(subtotalSpan);
+
         denominationsList.appendChild(row);
     });
 
-    // Funkcja resetująca (bez zmian od poprzedniej wersji)
+    // Funkcja resetująca
     const resetCalculator = () => {
         const inputs = denominationsList.querySelectorAll('.quantity-input:not(.roll-input)');
         inputs.forEach(input => { input.value = ''; });
@@ -290,10 +263,10 @@ document.addEventListener('DOMContentLoaded', () => {
         hideWithdrawalResults();
     };
 
-    // Nasłuchiwanie na eventy (bez zmian)
-    resetButton.addEventListener('click', resetCalculator);
-    calculate100Button.addEventListener('click', calculateWithdrawal);
+    // Nasłuchiwanie na eventy
+    resetButton?.addEventListener('click', resetCalculator);
+    calculate100Button?.addEventListener('click', calculateWithdrawal);
 
-    // Oblicz sumę początkową (bez zmian)
+    // Oblicz sumę początkową przy załadowaniu strony
     calculateTotal();
-}); // Koniec DOMContentLoaded
+});
