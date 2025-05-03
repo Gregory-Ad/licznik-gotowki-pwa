@@ -91,10 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
  
     // Funkcja obliczania wypłaty (logika bez zmian, tylko sposób wyświetlania)
     const calculateWithdrawal = () => {
-        // ... (cała logika obliczeń calculateWithdrawal pozostaje BEZ ZMIAN) ...
+        console.log("--- Przycisk $100 KLIKNIĘTY - start funkcji calculateWithdrawal ---"); // <--- DODAJ TEN LOG
+        // ... reszta kodu funkcji ...
+    
         const calculateWithdrawal = () => {
-            console.log("--- Przycisk $100 KLIKNIĘTY - start funkcji calculateWithdrawal ---"); // <--- DODAJ TEN LOG
-            // ... reszta kodu funkcji ...
         };
         const targetGrandTotalInCents = 10000;
         calculateTotal();
