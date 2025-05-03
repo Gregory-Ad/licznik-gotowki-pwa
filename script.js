@@ -93,6 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const calculateWithdrawal = () => {
         // ... (cała logika obliczeń calculateWithdrawal pozostaje BEZ ZMIAN) ...
         const calculateWithdrawal = () => {
+            console.log("--- Przycisk $100 KLIKNIĘTY - start funkcji calculateWithdrawal ---"); // <--- DODAJ TEN LOG
+            // ... reszta kodu funkcji ...
         };
         const targetGrandTotalInCents = 10000;
         calculateTotal();
