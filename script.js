@@ -92,118 +92,72 @@ document.addEventListener('DOMContentLoaded', () => {
     // Funkcja obliczania wypłaty (logika bez zmian, tylko sposób wyświetlania)
     const calculateWithdrawal = () => {
         // ... (cała logika obliczeń calculateWithdrawal pozostaje BEZ ZMIAN) ...
-        // ZMODYFIKOWANA Funkcja: Obliczanie wypłaty $100 (ignoruje rulony)
-const calculateWithdrawal = () => {
-
-    // <<<============================================================>>>
-    // <<<=== PIERWSZY CONSOLE.LOG: WSTAW DOKŁADNIE TUTAJ ===>>>
-    console.log("--- Przycisk $100 KLIKNIĘTY - start funkcji calculateWithdrawal ---");
-    // <<<============================================================>>>
-
-    const targetGrandTotalInCents = 10000; // $100
-
-    calculateTotal(); // Upewnij się, że sumy (w tym suma rulonów) są aktualne
-
-    // Sprawdź, czy w ogóle trzeba coś robić
-    if (currentGrandTotalInCents <= targetGrandTotalInCents) {
-        // Jeśli ten warunek jest spełniony, poniższy log się NIE pojawi, ale komunikat "Informacja" TAK
-        displayWithdrawalResults("<h3>Informacja</h3><p>Suma całkowita wynosi $100 lub mniej. Nie trzeba nic wyjmować.</p>");
-        return; // Ważne: funkcja kończy działanie tutaj
-    }
-
-    // Sprawdź, czy sama wartość rulonów nie przekracza $100
-    if (currentFixedRollsTotalInCents > targetGrandTotalInCents) {
-         // Jeśli ten warunek jest spełniony, poniższy log się NIE pojawi, ale komunikat "Problem" TAK
-         displayWithdrawalResults(`<h3>Problem</h3><p>Wartość samych rulonów (${formatCurrency(currentFixedRollsTotalInCents / 100)}) przekracza $100. Nie można osiągnąć celu bez otwierania rulonów.</p>`);
-         return; // Ważne: funkcja kończy działanie tutaj
-    }
-     // Sprawdź czy po usunięciu WSZYSTKICH luźnych zostanie ponad $100 (czyli czy jest to możliwe)
-    if (currentFixedRollsTotalInCents === currentGrandTotalInCents && currentGrandTotalInCents > targetGrandTotalInCents) {
-         // Jeśli ten warunek jest spełniony, poniższy log się NIE pojawi, ale komunikat "Problem" TAK
-         displayWithdrawalResults(`<h3>Problem</h3><p>Masz tylko rulony o wartości ${formatCurrency(currentFixedRollsTotalInCents / 100)}, co jest więcej niż $100. Nie można osiągnąć celu.</p>`);
-         return; // Ważne: funkcja kończy działanie tutaj
-    }
-
-    // Oblicz wartość tylko luźnych monet i banknotów (removable items)
-    const currentRemovableTotalInCents = currentGrandTotalInCents - currentFixedRollsTotalInCents;
-
-    // Ile powinna wynosić wartość luźnych monet/banknotów PO operacji?
-    const targetRemovableValue = targetGrandTotalInCents - currentFixedRollsTotalInCents;
-
-     // Ile TRZEBA usunąć z luźnych monet/banknotów?
-     if (targetRemovableValue < 0) {
-          // Jeśli ten warunek jest spełniony, poniższy log się NIE pojawi, ale komunikat "Problem" TAK
-          displayWithdrawalResults(`<h3>Problem</h3><p>Wartość samych rulonów (${formatCurrency(currentFixedRollsTotalInCents / 100)}) jest tak duża, że nie da się zejść do $100 usuwając tylko luźne środki.</p>`);
-         return; // Ważne: funkcja kończy działanie tutaj
-     }
-
-    let amountToRemoveFromRemovables = currentRemovableTotalInCents - targetRemovableValue;
-    amountToRemoveFromRemovables = Math.max(0, Math.round(amountToRemoveFromRemovables));
-
-    if (amountToRemoveFromRemovables <= 0) {
-         // Jeśli ten warunek jest spełniony, poniższy log się NIE pojawi, ale komunikat "Informacja" TAK
-         displayWithdrawalResults("<h3>Informacja</h3><p>Nie trzeba usuwać żadnych luźnych środków, aby pozostało $100 (lub mniej).</p>");
-         return; // Ważne: funkcja kończy działanie tutaj
-    }
-
-    const denominationsToRemove = {};
-
-    // Algorytm usuwania: Iteruj od największych REMOVABLE nominałów
-    denominationsSortedDesc.forEach(denom => {
-        // ... (logika pętli forEach bez zmian) ...
-         if (amountToRemoveFromRemovables <= 0) return;
-         const inputElement = document.getElementById(`input-${denom.id}`);
-         const currentLooseQuantity = parseInt(inputElement.value) || 0;
-         if (currentLooseQuantity > 0 && denom.valueInCents > 0) {
-             const maxUnitsNeeded = Math.floor(amountToRemoveFromRemovables / denom.valueInCents);
-             const unitsToRemove = Math.min(maxUnitsNeeded, currentLooseQuantity);
-             if (unitsToRemove > 0) {
-                 denominationsToRemove[denom.id] = unitsToRemove;
-                 amountToRemoveFromRemovables -= unitsToRemove * denom.valueInCents;
-                 amountToRemoveFromRemovables = Math.round(amountToRemoveFromRemovables);
-             }
-         }
-    });
-
-    // Formatowanie i wyświetlanie wyników
-    let resultText = "<h3>Aby zostało $100 (nie ruszając rulonów), wyjmij:</h3>";
-    let itemsFound = false;
-    let totalRemovedValueCheck = 0;
-
-    denominations.forEach(denom => { // Iteracja rosnąco dla wyświetlania
-        if (denominationsToRemove[denom.id] && denominationsToRemove[denom.id] > 0) {
-            itemsFound = true;
-            const count = denominationsToRemove[denom.id];
-            resultText += `<p>${count} x ${denom.label} (luźne)</p>`;
-            totalRemovedValueCheck += count * denom.valueInCents;
+        const calculateWithdrawal = () => {
+        };
+        const targetGrandTotalInCents = 10000;
+        calculateTotal();
+        if (currentGrandTotalInCents <= targetGrandTotalInCents) {
+            displayWithdrawalResults("<h3>Informacja</h3><p>Suma całkowita wynosi $100 lub mniej. Nie trzeba nic wyjmować.</p>");
+            return;
         }
-    });
-
-    if (!itemsFound && (currentGrandTotalInCents - currentFixedRollsTotalInCents) > targetRemovableValue) {
-        console.error("Błąd obliczeń wypłaty: Nie znaleziono luźnych nominałów do usunięcia.", { /* ... dane ... */ });
-         resultText = "<h3>Błąd</h3><p>Wystąpił błąd podczas obliczania wypłaty luźnych środków. Sprawdź konsolę.</p>";
-    } else if (!itemsFound) {
-         // Ten warunek jest mało prawdopodobny, jeśli amountToRemoveFromRemovables > 0
-         resultText = "<h3>Informacja</h3><p>Nie trzeba usuwać żadnych luźnych środków (itemsFound=false).</p>";
-    }
-    else {
-        // Normalne wyniki
-        resultText += `<p style="margin-top: 10px; font-weight: bold;">Pozostanie: ${formatCurrency(targetGrandTotalInCents / 100)}</p>`;
-        resultText += `<p style="font-size: 0.85em; opacity: 0.9;">(W tym ${formatCurrency(currentFixedRollsTotalInCents / 100)} w nienaruszonych rulonach)</p>`;
-        const expectedTotalRemoved = (currentGrandTotalInCents - currentFixedRollsTotalInCents) - targetRemovableValue;
-         if (Math.round(totalRemovedValueCheck) !== Math.round(expectedTotalRemoved)) {
-             console.warn("Niezgodność sumy usuniętych nominałów:", { expected: expectedTotalRemoved, actual: totalRemovedValueCheck });
-             resultText += `<p style="font-size: 0.8em; opacity: 0.8;">(Suma kontrolna usuniętych luźnych: ${formatCurrency(totalRemovedValueCheck/100)})</p>`;
+        if (currentFixedRollsTotalInCents > targetGrandTotalInCents) {
+             displayWithdrawalResults(`<h3>Problem</h3><p>Wartość samych rulonów (${formatCurrency(currentFixedRollsTotalInCents / 100)}) przekracza $100. Nie można osiągnąć celu bez otwierania rulonów.</p>`);
+             return;
+        }
+        if (currentFixedRollsTotalInCents === currentGrandTotalInCents && currentGrandTotalInCents > targetGrandTotalInCents) {
+             displayWithdrawalResults(`<h3>Problem</h3><p>Masz tylko rulony o wartości ${formatCurrency(currentFixedRollsTotalInCents / 100)}, co jest więcej niż $100. Nie można osiągnąć celu.</p>`);
+             return;
+        }
+        const currentRemovableTotalInCents = currentGrandTotalInCents - currentFixedRollsTotalInCents;
+        const targetRemovableValue = targetGrandTotalInCents - currentFixedRollsTotalInCents;
+         if (targetRemovableValue < 0) {
+              displayWithdrawalResults(`<h3>Problem</h3><p>Wartość samych rulonów (${formatCurrency(currentFixedRollsTotalInCents / 100)}) jest tak duża, że nie da się zejść do $100 usuwając tylko luźne środki.</p>`);
+             return;
          }
-    }
-
-    // <<<==============================================================>>>
-    // <<<=== DRUGI CONSOLE.LOG: WSTAW DOKŁADNIE PRZED TĄ LINIĄ ===>>>
-    console.log("--- Przed wywołaniem displayWithdrawalResults. Tekst: ---", resultText);
-    // <<<==============================================================>>>
-    displayWithdrawalResults(resultText);
-
-}; // Koniec funkcji calculateWithdrawal
+        let amountToRemoveFromRemovables = currentRemovableTotalInCents - targetRemovableValue;
+        amountToRemoveFromRemovables = Math.max(0, Math.round(amountToRemoveFromRemovables));
+        if (amountToRemoveFromRemovables <= 0) {
+             displayWithdrawalResults("<h3>Informacja</h3><p>Nie trzeba usuwać żadnych luźnych środków, aby pozostało $100 (lub mniej).</p>");
+             return;
+        }
+        const denominationsToRemove = {};
+        denominationsSortedDesc.forEach(denom => {
+            if (amountToRemoveFromRemovables <= 0) return;
+            const inputElement = document.getElementById(`input-${denom.id}`);
+            const currentLooseQuantity = parseInt(inputElement.value) || 0;
+            if (currentLooseQuantity > 0 && denom.valueInCents > 0) {
+                const maxUnitsNeeded = Math.floor(amountToRemoveFromRemovables / denom.valueInCents);
+                const unitsToRemove = Math.min(maxUnitsNeeded, currentLooseQuantity);
+                if (unitsToRemove > 0) {
+                    denominationsToRemove[denom.id] = unitsToRemove;
+                    amountToRemoveFromRemovables -= unitsToRemove * denom.valueInCents;
+                    amountToRemoveFromRemovables = Math.round(amountToRemoveFromRemovables);
+                }
+            }
+        });
+        let resultText = "<h3>Aby zostało $100 (nie ruszając rulonów), wyjmij:</h3>";
+        let itemsFound = false;
+        let totalRemovedValueCheck = 0;
+        denominations.forEach(denom => {
+            if (denominationsToRemove[denom.id] && denominationsToRemove[denom.id] > 0) {
+                itemsFound = true;
+                const count = denominationsToRemove[denom.id];
+                resultText += `<p>${count} x ${denom.label} (luźne)</p>`;
+                totalRemovedValueCheck += count * denom.valueInCents;
+            }
+        });
+        if (!itemsFound && (currentGrandTotalInCents - currentFixedRollsTotalInCents) > targetRemovableValue) {
+            console.error("Błąd obliczeń wypłaty: Nie znaleziono luźnych nominałów do usunięcia.", { /* ... dane ... */ });
+             resultText = "<h3>Błąd</h3><p>Wystąpił błąd podczas obliczania wypłaty luźnych środków. Sprawdź konsolę.</p>";
+        } else if (!itemsFound) {
+             resultText = "<h3>Informacja</h3><p>Nie trzeba usuwać żadnych luźnych środków.</p>";
+        }
+        else {
+            resultText += `<p style="margin-top: 10px; font-weight: bold;">Pozostanie: ${formatCurrency(targetGrandTotalInCents / 100)}</p>`;
+            resultText += `<p style="font-size: 0.85em; opacity: 0.9;">(W tym ${formatCurrency(currentFixedRollsTotalInCents / 100)} w nienaruszonych rulonach)</p>`;
+            const expectedTotalRemoved = (currentGrandTotalInCents - currentFixedRollsTotalInCents) - targetRemovableValue;
+             if (Math.round(totalRemovedValueCheck) !== Math.round(expectedTotalRemoved)) { /* ... warn ... */ }
+        }
 
         // Wywołujemy funkcję wyświetlającą z gotowym tekstem
         displayWithdrawalResults(resultText);
