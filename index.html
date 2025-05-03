@@ -40,15 +40,16 @@
 
     <script src="script.js"></script>
     <script>
-        // Prosta rejestracja Service Workera
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                // ZMIANA TUTAJ: Użyj './sw.js'
+                navigator.serviceWorker.register('./sw.js')
                     .then(registration => {
                         console.log('ServiceWorker zarejestrowany: ', registration);
+                        console.log('Scope:', registration.scope); // Dodajmy log scope'u
                     })
                     .catch(registrationError => {
-                        console.log('Rejestracja ServiceWorker nie powiodła się: ', registrationError);
+                        console.error('Rejestracja ServiceWorker nie powiodła się: ', registrationError);
                     });
             });
         }

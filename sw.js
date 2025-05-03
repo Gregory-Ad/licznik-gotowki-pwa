@@ -1,13 +1,13 @@
-const CACHE_NAME = 'cash-counter-cache-v1'; // Wersja cache'u jak wcześniej
+const CACHE_NAME = 'cash-counter-cache-v3'; // Wersja cache'u jak wcześniej
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/script.js',
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
-  // Brak background.jpg
+  '.', // Katalog bieżący
+  'index.html',
+  'style.css',
+  'script.js',
+  'manifest.json',
+  'icons/icon-192x192.png', // Ścieżka względna
+  'icons/icon-512x512.png', // Ścieżka względna
+  'background.jpg'
 ];
 
 // Instalacja Service Workera
