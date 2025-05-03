@@ -3,260 +3,298 @@
 
 :root {
     /* --- Paleta Wody (Aqua) --- */
-    --aqua-deep-bg: #0d3c4f;
-    --aqua-mid: #1a7a8c;
-    --aqua-light: #65c8d0;
-    --aqua-glass-bg: rgba(26, 122, 140, 0.4);
-    --aqua-highlight: #a2f3ef;
-    --aqua-text-light: #f0f8ff; /* Jasny tekst wodny */
-    --aqua-text-dark: #1f3a44; /* Ciemny tekst wodny (dla jasnego tła) */
-    --aqua-results-bg: #e8f4f8; /* Jasne tło wyników wodne */
-    --aqua-reset-main: #8a4fff; /* Fiolet wodny */
-    --aqua-reset-dark: #4a1a9c;
-    --aqua-shadow: rgba(0, 92, 122, 0.3);
+    --aqua-deep-bg: #0d3c4f; /* Ciemniejszy, mniej nasycony granat tła */
+    --aqua-mid: #1a7a8c;   /* Średni turkus/cyjan */
+    --aqua-light: #65c8d0; /* Jasny turkus */
+    --aqua-glass-bg: rgba(26, 122, 140, 0.4); /* Bardziej widoczne szkło wodne */
+    --aqua-highlight: #a2f3ef; /* Bardzo jasna poświata cyjanu */
 
-    /* --- Paleta Żaru (Fire) --- */
-    --fire-deep-bg: #4d0000;   /* Głęboka czerwień / bordo tła */
-    --fire-mid: #ff4500;     /* Pomarańczowo-czerwony */
-    --fire-light: #ffcc33;   /* Jasny żółty/złoty */
-    --fire-glass-bg: rgba(255, 69, 0, 0.3); /* Pomarańczowe szkło */
-    --fire-highlight: #fffacd; /* Bardzo jasny żółty (LemonChiffon) */
-    --fire-text-light: #fff8e1; /* Ciepły biały tekst (Cornsilk) */
-    --fire-text-dark: #6b2a00;  /* Ciemny brązowy tekst */
-    --fire-results-bg: #fff0e1; /* Bardzo jasne tło wyników ogniste (PapayaWhip light) */
-    --fire-reset-main: #b22222; /* Ciemna czerwień ognista (Firebrick) */
-    --fire-reset-dark: #800000; /* Maroon */
-    --fire-shadow: rgba(200, 50, 50, 0.4);
+    /* --- Paleta Żaru (Ember) --- */
+    --ember-yellow: #ffcc33; /* Żółty jak płomień */
+    --ember-orange: #ff884d; /* Jasny pomarańcz */
+    --ember-red: #ff4d4d;    /* Intensywna czerwień */
+    --ember-glow: rgba(255, 136, 77, 0.7); /* Pomarańczowa poświata */
+    --ember-shadow: rgba(200, 50, 50, 0.4); /* Czerwonawy cień */
 
-    /* --- Wspólne --- */
-    --blur-intensity: 8px;
-    --animation-duration: 20s; /* Czas trwania jednego cyklu Aqua -> Fire */
+    /* --- Paleta Neutralna/Akcentowa --- */
+    --violet-accent: #8a4fff; /* Fioletowy dla kontrastu (np. Reset) */
+    --deep-violet: #4a1a9c;
+    --text-light-primary: #f0f8ff; /* Bardzo jasny, prawie biały (AliceBlue) */
+    --text-dark-accent: #1f3a44;  /* Ciemny, lekko niebieskawy szary dla tekstu */
+    --bg-light-contrast: #e8f4f8; /* Bardzo jasne tło dla wyników (kontrast) */
+    --border-light: rgba(255, 255, 255, 0.2);
+    --shadow-dark: rgba(0, 0, 0, 0.2);
+    --blur-intensity: 8px; /* Zmniejszony blur dla czytelności */
 }
 
-/* --- Główna Animacja Zmiany Kolorów --- */
-@keyframes colorShift {
-    0% {
-        /* Stan Aqua */
-        --current-deep-bg: var(--aqua-deep-bg);
-        --current-mid: var(--aqua-mid);
-        --current-light: var(--aqua-light);
-        --current-glass-bg: var(--aqua-glass-bg);
-        --current-highlight: var(--aqua-highlight);
-        --current-text-light: var(--aqua-text-light);
-        --current-text-dark: var(--aqua-text-dark);
-        --current-results-bg: var(--aqua-results-bg);
-        --current-reset-main: var(--aqua-reset-main);
-        --current-reset-dark: var(--aqua-reset-dark);
-        --current-action-main: var(--aqua-mid); /* Przycisk $100 zaczyna jako aqua */
-        --current-action-dark: var(--aqua-deep-bg);
-        --current-focus-glow: var(--aqua-highlight); /* Poświata focusa */
-        --current-shadow: var(--aqua-shadow);
-    }
-    100% {
-        /* Stan Fire */
-        --current-deep-bg: var(--fire-deep-bg);
-        --current-mid: var(--fire-mid);
-        --current-light: var(--fire-light);
-        --current-glass-bg: var(--fire-glass-bg);
-        --current-highlight: var(--fire-highlight);
-        --current-text-light: var(--fire-text-light);
-        --current-text-dark: var(--fire-text-dark);
-        --current-results-bg: var(--fire-results-bg);
-        --current-reset-main: var(--fire-reset-main);
-        --current-reset-dark: var(--fire-reset-dark);
-        --current-action-main: var(--ember-orange); /* Przycisk $100 kończy jako fire */
-        --current-action-dark: var(--ember-red);
-        --current-focus-glow: var(--ember-orange); /* Poświata focusa */
-        --current-shadow: var(--fire-shadow);
-    }
+/* --- Animacje --- */
+@keyframes flowBackground { /* Bez zmian */
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-/* === Aplikacja Animacji === */
+/* Animacja Ognistej Poświaty Inputa */
+@keyframes inputEmberGlow {
+    0% { box-shadow: 0 0 7px 2px var(--ember-glow), inset 1px 1px 3px var(--shadow-dark); }
+    50% { box-shadow: 0 0 14px 5px var(--ember-glow), inset 1px 1px 3px var(--shadow-dark); }
+    100% { box-shadow: 0 0 7px 2px var(--ember-glow), inset 1px 1px 3px var(--shadow-dark); }
+}
+
+/* Animacja aktualizacji "Flash" */
+@keyframes flashUpdate {
+    0% { transform: scale(1); opacity: 1; color: var(--ember-yellow); text-shadow: 0 0 8px var(--ember-orange); }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; color: inherit; text-shadow: inherit; } /* Wróć do normalnego koloru/cienia */
+}
+
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-    /* ... (fonty, line-height itp. jak wcześniej) ... */
-    color: var(--current-text-light); /* Używamy zmiennej animowanej */
-    background: linear-gradient(135deg, var(--current-deep-bg), var(--current-mid), var(--current-light));
+    font-family: 'Nunito', sans-serif;
+    color: var(--text-light-primary); /* Domyślnie jasny tekst */
+    line-height: 1.6;
+    padding: 15px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Tło wodne */
+    background: linear-gradient(135deg, var(--aqua-deep-bg), var(--aqua-mid), var(--aqua-light));
     background-size: 300% 300%;
-    animation:
-        colorShift var(--animation-duration) ease-in-out infinite alternate, /* Główna animacja kolorów */
-        flowBackground 15s ease infinite; /* Dodatkowe płynięcie gradientu tła */
+    animation: flowBackground 15s ease infinite;
     min-height: 100vh;
+    font-size: 16px;
     overflow-x: hidden;
 }
 
 .container {
-    /* ... (layout, max-width, margin jak wcześniej) ... */
-    background: var(--current-glass-bg); /* Animowane tło szkła */
+    max-width: 700px;
+    margin: 30px auto;
+    /* Efekt szkła, ale bardziej widoczny */
+    background: var(--aqua-glass-bg);
     backdrop-filter: blur(var(--blur-intensity));
     -webkit-backdrop-filter: blur(var(--blur-intensity));
-    border-radius: 35px;
+    border-radius: 35px; /* Nadal okrągło */
     padding: 30px 35px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Ramka może pozostać stała lub też animowana */
+    border: 1px solid var(--border-light);
     position: relative;
     overflow: hidden;
-    /* Ważne: Container musi mieć dostęp do animowanych zmiennych */
-    animation: colorShift var(--animation-duration) ease-in-out infinite alternate;
-    animation-play-state: inherit; /* Synchronizuj z body */
 }
 
 h1 {
-    /* ... (text-align, font-size itp.) ... */
-    /* Gradient animowany przez zmienne */
-    background: linear-gradient(to right, var(--current-light), var(--current-highlight), var(--current-text-light));
+    text-align: center;
+    /* Gradient od ciepłego do chłodnego */
+    background: linear-gradient(to right, var(--ember-yellow), var(--aqua-highlight), var(--text-light-primary));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-     /* Potrzebuje dostępu do zmiennych */
-    animation: colorShift var(--animation-duration) ease-in-out infinite alternate;
-    animation-play-state: inherit;
+    margin-bottom: 35px;
+    font-weight: 700;
+    font-size: 2.1em;
+    padding-bottom: 5px;
+    line-height: 1.3;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtelny cień dla lepszego oddzielenia */
 }
 
 #denominations-list { margin-bottom: 25px; }
 
 .denomination-row {
-    /* ... (display, padding, gap itp.) ... */
-    background-color: rgba(255, 255, 255, 0.03); /* Statyczne lekkie tło */
-    border-radius: 15px; margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 5px; position: relative; gap: 15px; flex-wrap: wrap;
+    /* Lekko widoczne tło dla wiersza */
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    margin-bottom: 8px; /* Odstęp między wierszami */
     transition: background-color 0.3s ease;
-    /* Potrzebuje dostępu do zmiennych dla koloru tekstu etykiety */
-     animation: colorShift var(--animation-duration) ease-in-out infinite alternate;
-     animation-play-state: inherit;
 }
-.denomination-row:hover { background-color: rgba(255, 255, 255, 0.08); }
+.denomination-row::after { display: none; } /* Bez linii */
+
+.denomination-row:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
 
 .denomination-label {
-    /* ... (flex-basis, font-weight itp.) ... */
-    color: var(--current-text-light); /* Animowany kolor tekstu */
-    font-size: 1rem; margin-bottom: 10px; padding-left: 10px;
+    flex-basis: 100%; font-weight: 600;
+    color: var(--text-light-primary); /* Jasny tekst na ciemnym tle */
+    font-size: 1rem; margin-bottom: 10px;
+    padding-left: 10px; /* Wcięcie */
 }
 
-.inputs-container { /* Bez zmian w animacji */ }
+.inputs-container {
+    flex-basis: 100%; display: flex; align-items: center;
+    gap: 12px; flex-wrap: wrap; order: 2; padding: 0 5px;
+}
 
 .quantity-input {
-    /* ... (padding, border-radius, text-align itp.) ... */
-    background-color: rgba(0, 0, 0, 0.3); /* Statyczne ciemne tło */
-    color: var(--current-text-light); /* Animowany kolor tekstu */
-    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.2);
+    padding: 12px 16px; border: none;
+    border-radius: 20px; /* Mniej ekstremalne zaokrąglenie */
+    text-align: right; font-family: inherit; font-size: 1rem;
+    /* Ciemniejsze tło inputa dla kontrastu */
+    background-color: rgba(0, 0, 0, 0.3);
+    color: var(--text-light-primary); /* Jasny tekst w inpucie */
+    box-shadow: inset 1px 1px 3px var(--shadow-dark);
     transition: box-shadow 0.3s ease, background-color 0.3s ease;
     min-height: 46px; outline: none;
-    /* Potrzebuje dostępu do zmiennych */
-     animation: colorShift var(--animation-duration) ease-in-out infinite alternate;
-     animation-play-state: inherit;
 }
-.quantity-input::placeholder { color: rgba(240, 248, 255, 0.6); opacity: 1; } /* Można by też animować, ale to skomplikowane */
+.quantity-input::placeholder {
+    color: rgba(240, 248, 255, 0.6); /* Jaśniejszy, czytelny placeholder */
+    opacity: 1;
+}
 .quantity-input::-webkit-outer-spin-button,
 .quantity-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
 .quantity-input:focus {
-    background-color: rgba(0, 0, 0, 0.4);
-    /* Animowana poświata używająca zmiennej --current-focus-glow */
-    box-shadow: 0 0 10px 4px var(--current-focus-glow), inset 1px 1px 3px rgba(0, 0, 0, 0.2);
-    /* Usunięto osobną animację glow, cień zmienia się z główną animacją */
+    background-color: rgba(0, 0, 0, 0.4); /* Lekko ciemniej na focusie */
+    /* Ognista poświata na focusie */
+    animation: inputEmberGlow 1.3s ease-in-out infinite alternate;
 }
 
-.roll-input-container { /* Bez zmian */ }
+.inputs-container .bill-input { width: 100%; max-width: none; flex-basis: 100%; }
+
 .roll-label {
-    /* ... */
-    color: var(--current-text-light); /* Animowany kolor */
-    opacity: 0.8;
-     /* Potrzebuje dostępu do zmiennych */
-    animation: colorShift var(--animation-duration) ease-in-out infinite alternate;
-    animation-play-state: inherit;
+    font-size: 0.9em; color: var(--text-light-primary); opacity: 0.8;
+    white-space: nowrap; margin-right: auto; padding-left: 10px;
 }
-.roll-input { /* Bez zmian */ }
+.roll-input { flex-grow: 0; flex-shrink: 0; width: 100px; max-width: 100px; }
 
 .subtotal {
-    /* ... (layout, font-weight itp.) ... */
-    color: var(--current-highlight); /* Animowany kolor highlightu */
-    font-size: 1.1rem; padding-left: 10px; align-self: center; margin: 0;
+    flex-basis: auto; order: 1; text-align: right;
+    font-weight: 700;
+    color: var(--aqua-highlight); /* Jasny, czytelny kolor wodny */
+    font-size: 1.1rem; padding-left: 10px;
+    align-self: center; /* Wyśrodkuj pionowo z inputami */
+    margin: 0; /* Reset marginesu */
     white-space: nowrap;
-    text-shadow: 0 0 6px color-mix(in srgb, var(--current-highlight) 50%, transparent); /* Animowana poświata */
-     /* Potrzebuje dostępu do zmiennych */
-     animation: colorShift var(--animation-duration) ease-in-out infinite alternate;
-     animation-play-state: inherit;
+    text-shadow: 0 0 6px rgba(162, 243, 239, 0.5); /* Subtelna poświata */
 }
 
-/* Animacja aktualizacji Flash - bez zmian */
-@keyframes flashUpdate { /* ... */ }
-.subtotal.updated, #grand-total.updated { animation: flashUpdate 0.6s ease-out; }
+/* Animacja aktualizacji "Flash" */
+.subtotal.updated, #grand-total.updated {
+    /* Zastosuj wspólny styl bazowy dla animacji */
+    animation: flashUpdate 0.6s ease-out;
+}
 
 .total-section {
-    /* ... (margin, padding, border-radius itp.) ... */
-    background: linear-gradient(145deg, var(--current-reset-main), var(--current-action-main)); /* Animowany gradient */
-    text-align: center; color: var(--current-text-light);
+    margin-top: 35px; padding: 25px;
+    /* Gradient od chłodnego fioletu do ciepłego pomarańczu */
+    background: linear-gradient(145deg, var(--violet-accent), var(--ember-orange));
+    border-radius: 30px; text-align: center; color: var(--text-light-primary);
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.25), 0 6px 20px rgba(0, 0, 0, 0.2);
     position: relative; overflow: hidden;
-     /* Potrzebuje dostępu do zmiennych */
-     animation: colorShift var(--animation-duration) ease-in-out infinite alternate;
-     animation-play-state: inherit;
 }
-.total-section h2 { /* ... */ color: var(--current-text-light); /* Animowany */ }
+
+.total-section h2 {
+    font-size: 0.9rem; margin-bottom: 8px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.9;
+    position: relative; z-index: 1;
+    color: var(--text-light-primary);
+}
 #grand-total {
-    /* ... */ color: var(--current-text-light); /* Animowany */
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-     /* Potrzebuje dostępu do zmiennych */
-     animation: colorShift var(--animation-duration) ease-in-out infinite alternate;
-     animation-play-state: inherit;
+    font-size: 2.8em; font-weight: 700; display: block;
+    line-height: 1.1; margin-bottom: 5px;
+    color: var(--text-light-primary); /* Bezpośrednio jasny kolor dla czytelności */
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Mocniejszy cień dla kontrastu */
+    word-break: break-all; position: relative; z-index: 1;
 }
 
-.withdrawal-section { /* Bez zmian */ }
+.withdrawal-section { margin-top: 30px; margin-bottom: 30px; text-align: center; }
 
+/* Wyniki wypłaty - jasne tło, ciemny tekst */
 .withdrawal-results-display {
-    /* ... (padding, border-radius itp.) ... */
-    background-color: var(--current-results-bg); /* Animowane tło */
-    color: var(--current-text-dark); /* Animowany ciemny tekst */
+    padding: 20px 25px;
+    background-color: var(--bg-light-contrast); /* Jasne, prawie nieprzezroczyste tło */
+    color: var(--text-dark-accent); /* Ciemny tekst dla czytelności */
+    border-radius: 20px;
+    text-align: left; font-size: 0.95rem;
+    line-height: 1.6; margin-top: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    /* ... (reszta stylów dla widoczności/animacji wejścia) ... */
-     /* Potrzebuje dostępu do zmiennych */
-     animation: colorShift var(--animation-duration) ease-in-out infinite alternate;
-     animation-play-state: inherit;
-}
-/* ... (style dla .visible / :not(.visible)) ... */
-.withdrawal-results-display h3 { /* ... */ color: var(--current-reset-main); /* Animowany kolor nagłówka */ }
-.withdrawal-results-display p { /* ... */ color: var(--current-text-dark); /* Animowany kolor tekstu */ }
+    border: 1px solid rgba(0, 0, 0, 0.05); /* Subtelna ramka */
 
-/* Przyciski */
+    /* Animacja pojawiania - prostsza, szybsza */
+    opacity: 0; transform: translateY(10px); max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease,
+                margin-top 0.35s ease, padding 0.35s ease, border-width 0.35s ease;
+}
+.withdrawal-results-display.visible {
+    opacity: 1; transform: translateY(0); max-height: 1000px;
+    margin-top: 20px; padding: 20px 25px; border-width: 1px;
+}
+.withdrawal-results-display:not(.visible) {
+     margin-top: 0; padding-top: 0; padding-bottom: 0; border-width: 0;
+}
+
+.withdrawal-results-display h3 {
+    margin-top: 0; margin-bottom: 12px; font-size: 1.1rem;
+    font-weight: 700; color: var(--deep-violet); /* Akcent fioletowy */
+}
+.withdrawal-results-display p { margin-bottom: 8px; color: var(--text-dark-accent); }
+.withdrawal-results-display p:last-child { margin-bottom: 0; }
+
+/* Przyciski - ognisty dla akcji, fioletowy dla resetu */
 #calculate-100-button,
 #reset-button {
-    /* ... (display, padding, border-radius itp.) ... */
-    color: var(--current-text-light);
+    display: block; width: 100%; padding: 15px 20px; margin-bottom: 20px;
+    border: none; border-radius: 50px; font-weight: 700; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--text-light-primary);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease-out, filter 0.2s ease-out; /* Usunięto transition dla tła/cienia */
-    min-height: 50px; position: relative; overflow: hidden;
-     /* Potrzebuje dostępu do zmiennych */
-     animation: colorShift var(--animation-duration) ease-in-out infinite alternate;
-     animation-play-state: inherit;
+    box-shadow: 0 5px 15px var(--shadow-dark); /* Subtelniejszy cień */
+    transition: all 0.2s ease-out;
+    min-height: 50px;
+    position: relative; /* Dla potencjalnych efektów */
+    overflow: hidden;
 }
 
 #calculate-100-button {
-    background: linear-gradient(135deg, var(--current-action-main), var(--current-action-dark)); /* Animowany gradient */
-    box-shadow: 0 5px 15px color-mix(in srgb, var(--current-action-dark) 50%, transparent); /* Animowany cień */
+    /* Ognisty gradient */
+    background: linear-gradient(135deg, var(--ember-orange), var(--ember-red));
+    box-shadow: 0 5px 15px var(--ember-shadow); /* Cień w kolorze ognia */
     font-size: 1.1em;
 }
 #reset-button {
-     background: linear-gradient(135deg, var(--current-reset-main), var(--current-reset-dark)); /* Animowany gradient */
-     box-shadow: 0 5px 15px color-mix(in srgb, var(--current-reset-dark) 40%, transparent); /* Animowany cień */
-     font-size: 1rem; margin-bottom: 0;
+     /* Fioletowy gradient dla kontrastu */
+     background: linear-gradient(135deg, var(--violet-accent), var(--deep-violet));
+     box-shadow: 0 5px 15px rgba(74, 26, 156, 0.4); /* Cień fioletowy */
+     font-size: 1rem;
+     margin-bottom: 0;
 }
 
-/* Stany hover/active dla przycisków - działają niezależnie od animacji kolorów */
 #calculate-100-button:hover,
 #reset-button:hover {
-    transform: translateY(-2px) scale(1.01);
-    filter: brightness(1.15);
+    transform: translateY(-2px) scale(1.01); /* Mniejsze uniesienie */
+    filter: brightness(1.15); /* Rozjaśnienie na hover */
+    box-shadow: 0 8px 20px var(--ember-shadow); /* Intensywniejszy cień */
 }
+#reset-button:hover {
+    box-shadow: 0 8px 20px rgba(74, 26, 156, 0.5);
+}
+
 #calculate-100-button:active,
 #reset-button:active {
-    transform: translateY(1px) scale(0.98);
-    filter: brightness(0.9);
+    transform: translateY(1px) scale(0.98); /* Mniejsze wciśnięcie */
+    filter: brightness(0.9); /* Przyciemnienie na active */
+    box-shadow: 0 2px 8px var(--ember-shadow);
+}
+#reset-button:active {
+    box-shadow: 0 2px 8px rgba(74, 26, 156, 0.4);
 }
 
-
-/* Media query bez zmian w logice, ale elementy wewnątrz też potrzebują dostępu do animacji */
+/* Dostosowanie do szerszych ekranów */
 @media (min-width: 600px) {
-    /* ... (dostosowania layoutu jak wcześniej) ... */
-    /* Upewnij się, że elementy stylizowane tylko tutaj też mają animację, jeśli to konieczne */
+    body { padding: 30px; }
+    .container { padding: 40px 50px; border-radius: 40px; margin: 40px auto; }
+    h1 { font-size: 2.5em; margin-bottom: 40px; }
+
+    .denomination-row { flex-wrap: nowrap; gap: 20px; padding: 15px 15px; margin-bottom: 10px; }
+    .denomination-label { flex-basis: 25%; text-align: left; margin-bottom: 0; padding-right: 5px; }
+    .inputs-container { flex-basis: 50%; order: 0; flex-wrap: nowrap; margin-top: 0; }
+    .quantity-input { max-width: 110px; }
+    .inputs-container .bill-input { flex-grow: 1; }
+    .roll-input-container { flex-basis: auto; flex-wrap: nowrap; margin-top: 0; }
+    .subtotal { flex-basis: 20%; order: 0; align-self: center; margin-top: 0; padding-left: 5px; min-width: 100px; font-size: 1.15rem; }
+
+    #grand-total { font-size: 3.2em; }
+    .withdrawal-results-display { font-size: 1rem; }
 }
