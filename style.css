@@ -1,257 +1,406 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+/* Import czcionki o gładkich kształtach */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
 
 :root {
-    /* Paleta kolorów bez zmian */
-    --primary-gradient: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    --secondary-gradient: linear-gradient(135deg, #6f42c1 0%, #4a148c 100%);
-    --success-gradient: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
-    --danger-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-    --background-card-color: rgba(255, 255, 255, 0.97);
-    --text-dark: #212529;
-    --text-light: #ffffff;
-    --text-muted: #5a6268;
-    --border-light: rgba(0, 0, 0, 0.08);
-    --shadow-color: rgba(0, 0, 0, 0.15);
-    --input-focus-color: #80bdff;
-    --input-bg: #f8f9fa;
-    --info-bg: #e9f5ff;
-    --info-border: #b8dfff;
-    --info-text: #004085;
-    --update-highlight-color: #6f42c1; /* Kolor do animacji update */
+    /* Głębokie i jasne odcienie wody */
+    --aqua-deep: #005c7a;
+    --aqua-mid: #0097b2;
+    --aqua-light: #7ED9E0; /* Jaśniejszy, bardziej turkusowy */
+    --aqua-glow: #a2f3ef; /* Bardzo jasny, prawie biały cyjan do poświaty */
+    --water-foam: rgba(255, 255, 255, 0.9); /* Biały jak piana */
+
+    /* Tekst */
+    --text-submerged: #e0f7fa; /* Bardzo jasny błękitny, jak pod wodą */
+    --text-deep-water: #023e50; /* Ciemny, nasycony granat/teal */
+
+    /* Akcent (np. dla Reset) */
+    --coral-accent: #ff7f50; /* Koralowy */
+    --sand-accent: #f4a460; /* Piaskowy */
+
+    /* Cienie i przezroczystości */
+    --shadow-water: rgba(0, 92, 122, 0.3);
+    --background-glass: rgba(171, 226, 235, 0.2); /* Bardzo lekki błękitny przezroczysty */
+    --blur-intensity: 12px;
 }
 
+/* --- Animacja tła --- */
+@keyframes flowBackground {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* --- Animacja poświaty inputa --- */
+@keyframes inputGlow {
+    0% { box-shadow: 0 0 8px 2px rgba(162, 243, 239, 0.5), inset 2px 2px 5px rgba(0,0,0,0.2); }
+    50% { box-shadow: 0 0 16px 6px rgba(162, 243, 239, 0.8), inset 2px 2px 5px rgba(0,0,0,0.2); }
+    100% { box-shadow: 0 0 8px 2px rgba(162, 243, 239, 0.5), inset 2px 2px 5px rgba(0,0,0,0.2); }
+}
+
+/* --- Animacja aktualizacji "Ripple" --- */
+@keyframes rippleUpdate {
+    0% { transform: scale(1); opacity: 1; filter: blur(0); }
+    30% { transform: scale(0.9); opacity: 0.5; filter: blur(2px); }
+    100% { transform: scale(1); opacity: 1; filter: blur(0); }
+}
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-    /* Bez zmian */
-    font-family: 'Poppins', sans-serif; color: var(--text-dark); line-height: 1.6; padding: 15px;
-    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('background.jpg');
-    background-size: cover; background-position: center center; background-repeat: no-repeat;
-    background-attachment: fixed; min-height: 100vh; font-size: 16px;
+    font-family: 'Nunito', sans-serif;
+    color: var(--text-submerged);
+    line-height: 1.6;
+    padding: 15px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Dynamiczne, płynące tło gradientowe */
+    background: linear-gradient(135deg, var(--aqua-deep), var(--aqua-mid), var(--aqua-light), #6fcfd3);
+    background-size: 400% 400%;
+    animation: flowBackground 18s ease infinite;
+    min-height: 100vh;
+    font-size: 16px;
+    overflow-x: hidden; /* Zapobiegaj poziomemu przewijaniu */
 }
 
 .container {
-    /* Bez zmian */
-    max-width: 700px; margin: 20px auto; background-color: var(--background-card-color);
-    padding: 25px; border-radius: 20px; box-shadow: 0 6px 25px var(--shadow-color);
-    border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    max-width: 700px;
+    margin: 30px auto;
+    /* Efekt szkła/wody */
+    background: var(--background-glass);
+    backdrop-filter: blur(var(--blur-intensity));
+    -webkit-backdrop-filter: blur(var(--blur-intensity));
+    /* Organiczny kształt */
+    border-radius: 45px; /* Duże zaokrąglenie */
+    /* border-radius: 50% / 30%; /* Bardziej owalny, eksperymentalny */
+    padding: 30px 35px;
+    /* Cień dla głębi */
+    box-shadow: 0 10px 35px var(--shadow-water);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    position: relative; /* Dla potencjalnych absolutnych elementów wewnątrz */
+    overflow: hidden; /* Ukryj co wystaje przez border-radius */
 }
 
 h1 {
-    /* Bez zmian */
-    text-align: center; background: var(--primary-gradient); -webkit-background-clip: text;
-    background-clip: text; color: transparent; margin-bottom: 30px; font-weight: 700;
-    font-size: 1.9em; padding-bottom: 5px; line-height: 1.3;
+    text-align: center;
+    /* Tekst jakby zrobiony z wody/światła */
+    background: linear-gradient(to right, var(--water-foam), var(--aqua-glow), var(--aqua-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 35px;
+    font-weight: 700;
+    font-size: 2.1em;
+    padding-bottom: 5px;
+    line-height: 1.3;
+    text-shadow: 0 2px 8px rgba(0, 92, 122, 0.4);
 }
 
 #denominations-list { margin-bottom: 25px; }
 
 .denomination-row {
-    /* Bez zmian */
-    display: flex; justify-content: space-between; align-items: center; padding: 15px 0;
-    position: relative; gap: 10px; flex-wrap: wrap;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 5px; /* Więcej przestrzeni pionowej */
+    position: relative;
+    gap: 15px;
+    flex-wrap: wrap;
+    /* Brak twardych linii - separacja przez przestrzeń */
+    border-bottom: 1px solid transparent; /* Placeholder dla ostatniego */
+    transition: background-color 0.4s ease; /* Efekt na hover */
 }
-.denomination-row::after {
-    /* Bez zmian */
-    content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px;
-    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.06), transparent);
+.denomination-row::after { display: none; } /* Usuwamy linie */
+
+.denomination-row:not(:last-child) {
+     /* Delikatna linia jak fala */
+     border-bottom: 1px solid linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+      border-image: linear-gradient(to right, transparent 10%, rgba(255, 255, 255, 0.15) 50%, transparent 90%) 1;
+
 }
-.denomination-row:last-child::after { display: none; }
+
+.denomination-row:hover {
+    background-color: rgba(255, 255, 255, 0.05); /* Lekkie podświetlenie */
+    border-radius: 20px; /* Zaokrąglenie na hover */
+}
 
 .denomination-label {
-    /* Bez zmian */
-    flex-basis: 100%; font-weight: 600; color: var(--text-dark); padding-right: 0;
-    font-size: 1rem; margin-bottom: 8px; text-align: left;
+    flex-basis: 100%;
+    font-weight: 600;
+    color: var(--text-submerged);
+    font-size: 1rem;
+    margin-bottom: 10px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Efekt zanurzenia */
+    padding-left: 5px;
 }
 
 .inputs-container {
-    /* Bez zmian */
-    flex-basis: 100%; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    flex-basis: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
     order: 2;
 }
 
 .quantity-input {
-    /* Dodajemy transition dla płynniejszego focus */
-    padding: 12px 14px; border: 1px solid var(--border-light); border-radius: 12px;
-    text-align: right; font-family: inherit; font-size: 1rem;
-    transition: all 0.2s ease-in-out, border-color 0.2s ease, box-shadow 0.2s ease; /* Dodano transition */
-    background-color: var(--input-bg); box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
-    
-    min-height: 44px;
+    padding: 12px 18px;
+    /* Kształt jak gładkie wgłębienie */
+    border: none;
+    border-radius: 30px; /* Bardzo okrągłe */
+    text-align: right;
+    font-family: inherit;
+    font-size: 1rem;
+    background-color: rgba(0, 0, 0, 0.15); /* Ciemniejsze wgłębienie */
+    color: var(--water-foam);
+    /* Cień wewnętrzny symulujący wgłębienie */
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3),
+                inset -1px -1px 3px rgba(255, 255, 255, 0.05);
+    transition: box-shadow 0.3s ease;
+    min-height: 48px; /* Większy cel dotykowy */
+    outline: none; /* Usuwamy domyślny outline */
+}
+.quantity-input::placeholder {
+    color: rgba(224, 247, 250, 0.5); /* Subtelny placeholder */
+    opacity: 1;
 }
 .quantity-input::-webkit-outer-spin-button,
 .quantity-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
 .quantity-input:focus {
-    /* Bez zmian */
-    border-color: var(--input-focus-color); outline: 0;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2), inset 0 1px 2px rgba(0,0,0,0.06);
-    background-color: #fff;
-}
-.inputs-container .bill-input {
-    /* Bez zmian */
-    width: 100%; max-width: none; flex-basis: 100%;
+    /* Animowana poświata zamiast twardej ramki */
+    animation: inputGlow 1.5s ease-in-out infinite;
 }
 
+.inputs-container .bill-input { width: 100%; max-width: none; flex-basis: 100%; }
+
 .roll-input-container {
-    /* Bez zmian */
-    display: flex; align-items: center; gap: 8px; flex-basis: 100%; flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-basis: 100%;
+    flex-wrap: wrap;
     margin-top: 5px;
 }
 .roll-label {
-    /* Bez zmian */
-    font-size: 0.9em; color: var(--text-muted); white-space: nowrap; margin-right: auto;
-    padding-left: 2px;
+    font-size: 0.9em;
+    color: var(--text-submerged);
+    opacity: 0.8;
+    white-space: nowrap;
+    margin-right: auto;
+    padding-left: 7px;
 }
 .roll-input {
-   /* Bez zmian */
    flex-grow: 0; flex-shrink: 0; width: 100px; max-width: 100px;
+   /* Dziedziczy styl z .quantity-input */
 }
 
 .subtotal {
-    /* Bez zmian */
-    flex-basis: auto; order: 1; text-align: right; font-weight: 600;
-    color: var(--text-muted); font-size: 1rem; padding-left: 10px;
-    align-self: flex-start; margin-top: 3px; white-space: nowrap;
-    transition: color 0.3s ease; /* Dodajemy transition dla płynnej zmiany koloru w animacji */
+    flex-basis: auto;
+    order: 1;
+    text-align: right;
+    font-weight: 700; /* Pogrubiony */
+    color: var(--aqua-glow); /* Jasny, świecący */
+    font-size: 1.1rem;
+    padding-left: 10px;
+    align-self: flex-start;
+    margin-top: 3px;
+    white-space: nowrap;
+    /* Efekt blasku/unoszenia */
+    text-shadow: 0 0 10px rgba(162, 243, 239, 0.8),
+                 0 0 5px rgba(255, 255, 255, 0.5);
+    transition: color 0.4s ease, text-shadow 0.4s ease;
 }
 
-/* --- Animacja aktualizacji sum --- */
-@keyframes pop-update {
-    0% { transform: scale(1); color: var(--text-muted); }
-    25% { transform: scale(1.08); color: var(--update-highlight-color); }
-    100% { transform: scale(1); color: var(--text-muted); }
-}
-@keyframes pop-update-grand { /* Osobna dla grand total, bo ma inny kolor bazowy */
-     0% { transform: scale(1); color: var(--text-light); }
-     25% { transform: scale(1.05); color: #ffd700; } /* Złoty highlight */
-     100% { transform: scale(1); color: var(--text-light); }
-}
-
+/* Animacja aktualizacji "Ripple" */
 .subtotal.updated {
-    animation: pop-update 0.4s ease-out;
+    animation: rippleUpdate 0.5s ease-out;
 }
 #grand-total.updated {
-    animation: pop-update-grand 0.4s ease-out;
+     animation: rippleUpdate 0.6s ease-out; /* Może być nieco wolniejsza */
 }
-/* --- Koniec animacji sum --- */
-
 
 .total-section {
-    /* Bez zmian */
-    margin-top: 30px; padding: 20px; background: var(--secondary-gradient); border-radius: 15px;
-    text-align: center; color: var(--text-light); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 35px;
+    padding: 25px;
+    /* Gradient jak głębsza woda */
+    background: linear-gradient(145deg, var(--aqua-mid), var(--aqua-deep));
+    /* Organiczny kształt wewnątrz kontenera */
+    border-radius: 35px;
+    text-align: center;
+    color: var(--water-foam);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2), /* Cień wewnętrzny */
+                0 5px 15px rgba(0, 92, 122, 0.3); /* Cień zewnętrzny */
+    position: relative;
+    overflow: hidden;
 }
+/* Dodatkowa warstwa dla efektu głębi */
+.total-section::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(126, 217, 224, 0.15) 0%, rgba(0, 151, 178, 0) 70%);
+    animation: rotateGlow 15s linear infinite; /* Powolny obrót poświaty */
+    z-index: 0;
+}
+@keyframes rotateGlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
 .total-section h2 {
-    /* Bez zmian */
-    font-size: 0.85rem; margin-bottom: 5px; font-weight: 400; text-transform: uppercase;
-    letter-spacing: 1px; opacity: 0.85;
+    font-size: 0.9rem; margin-bottom: 8px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    opacity: 0.8; position: relative; z-index: 1;
 }
 #grand-total {
-    /* Bez zmian */
-    font-size: 2.4em; font-weight: 700; display: block; line-height: 1.1; margin-bottom: 5px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); word-break: break-all;
-    transition: color 0.3s ease; /* Dodajemy transition dla płynnej zmiany koloru w animacji */
+    font-size: 2.8em; font-weight: 700; display: block;
+    line-height: 1.1; margin-bottom: 5px;
+    /* Gradientowy tekst dla sumy */
+    background: linear-gradient(to bottom, var(--water-foam), var(--aqua-glow));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 15px rgba(162, 243, 239, 0.6);
+    word-break: break-all;
+    position: relative; z-index: 1;
+    /* Lekkie falowanie */
+    /* animation: waveText 5s ease-in-out infinite alternate; */ /* Może być zbyt rozpraszające */
 }
+/* @keyframes waveText { 0% { transform: translateY(0); } 100% { transform: translateY(-2px); } } */
 
-.withdrawal-section { margin-top: 25px; margin-bottom: 25px; text-align: center; }
 
-/* --- Animacja wyników wypłaty --- */
+.withdrawal-section { margin-top: 30px; margin-bottom: 30px; text-align: center; }
+
+/* Styl wyników wypłaty - jak bańka/mgła */
 .withdrawal-results-display {
-    padding: 15px; border: 1px solid var(--info-border); background-color: var(--info-bg);
-    color: var(--info-text); border-radius: 10px; text-align: left; font-size: 0.95rem;
+    padding: 20px 25px;
+    background: rgba(126, 217, 224, 0.25); /* Błękitna mgła */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--text-deep-water); /* Ciemniejszy tekst dla kontrastu na jasnym tle */
+    border-radius: 30px; /* Zaokrąglone */
+    text-align: left; font-size: 0.95rem;
     line-height: 1.6;
-    margin-top: 15px;
-    /* Styl początkowy (ukryty) */
+    margin-top: 20px;
+    box-shadow: 0 5px 20px rgba(0, 92, 122, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    /* Animacja pojawiania - jak wynurzanie */
     opacity: 0;
-    transform: translateY(15px);
-    max-height: 0; /* Dodajemy max-height dla płynnego zwijania/rozwijania */
-    overflow: hidden; /* Ukrywamy zawartość, gdy max-height=0 */
-    transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease, margin-top 0.35s ease, padding 0.35s ease;
+    transform: scale(0.9) translateY(10px);
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                max-height 0.5s ease-out,
+                margin-top 0.45s ease, padding 0.45s ease, border-width 0.45s ease;
 }
 .withdrawal-results-display.visible {
     opacity: 1;
-    transform: translateY(0);
-    max-height: 1000px; /* Ustaw wystarczająco dużą wartość, aby zmieścić treść */
-    /* Przywracamy padding i margin, gdy widoczne */
-     margin-top: 15px;
-     padding: 15px;
-     border-width: 1;
+    transform: scale(1) translateY(0);
+    max-height: 1000px;
+    margin-top: 20px;
+    padding: 20px 25px;
+    border-width: 1px;
 }
-/* Ustawiamy padding i margin na 0, gdy ukryte, aby uniknąć pustego miejsca */
 .withdrawal-results-display:not(.visible) {
-     margin-top: 0;
-     padding-top: 0;
-     padding-bottom: 0;
-     border-width: 0; /* Ukryj ramkę */
+     margin-top: 0; padding-top: 0; padding-bottom: 0; border-width: 0;
 }
-/* --- Koniec animacji wyników --- */
 
-.withdrawal-results-display h3 { margin-top: 0; margin-bottom: 12px; font-size: 1.05rem; font-weight: 600; color: var(--info-text); }
-.withdrawal-results-display p { margin-bottom: 8px; }
+.withdrawal-results-display h3 {
+    margin-top: 0; margin-bottom: 12px; font-size: 1.1rem;
+    font-weight: 700; color: var(--text-deep-water);
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+.withdrawal-results-display p { margin-bottom: 8px; color: var(--text-deep-water); } /* Ciemniejszy tekst */
 .withdrawal-results-display p:last-child { margin-bottom: 0; }
 
-/* --- Animacje przycisków --- */
+
+/* Przyciski jak krople/otoczaki */
 #calculate-100-button,
 #reset-button {
-    display: block; width: 100%; padding: 14px 20px; margin-bottom: 20px;
-    border: none; border-radius: 50px; font-weight: 600; cursor: pointer;
-    text-transform: uppercase; letter-spacing: 1px;
-    color: var(--text-light);
-    /* Dodano transition dla transform */
-    transition: all 0.3s ease, transform 0.1s ease;
+    display: block; width: 100%; padding: 16px 20px; margin-bottom: 20px;
+    border: none;
+    /* Kształt */
+    border-radius: 50px; /* Idealnie okrągłe końce */
+    font-weight: 700; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--water-foam);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    /* Efekt 3D */
+    box-shadow: 0 6px 18px var(--shadow-water), /* Główny cień */
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2), /* Cień wewnętrzny na dole */
+                inset 0 2px 3px rgba(255, 255, 255, 0.2); /* Połysk wewnętrzny na górze */
+    transition: all 0.2s ease-out;
+    position: relative;
+    overflow: hidden; /* Dla efektów ::before/::after */
+    min-height: 52px;
 }
 
+/* Efekt połysku na przyciskach */
+#calculate-100-button::before,
+#reset-button::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+    transform: scale(0);
+    transition: transform 0.5s ease;
+    z-index: 0;
+}
+#calculate-100-button:hover::before,
+#reset-button:hover::before {
+    transform: scale(1.5);
+}
+/* Tekst nad efektem */
+#calculate-100-button span,
+#reset-button span {
+    position: relative; z-index: 1;
+}
+/* Dodaj <span> wokół tekstu przycisków w HTML, aby to działało */
+/* np. <button id="reset-button"><span>Wyczyść wszystko</span></button> */
+
+
 #calculate-100-button {
-    background: var(--success-gradient); font-size: 1rem;
-    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3); min-height: 46px;
+    background: linear-gradient(135deg, var(--aqua-light), var(--aqua-mid));
+    font-size: 1.1em;
 }
 #reset-button {
-     background: var(--danger-gradient); font-size: 1.1em;
-     box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4); min-height: 48px;
-     margin-bottom: 0; /* Reset jest ostatni, usuwamy dolny margines */
+     background: linear-gradient(135deg, var(--coral-accent), var(--sand-accent));
+     font-size: 1rem;
+     margin-bottom: 0;
 }
 
 #calculate-100-button:hover,
 #reset-button:hover {
-    /* Bez zmian */
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4); /* Dostosuj cień dla każdego przycisku jeśli trzeba */
-}
-#reset-button:hover {
-     box-shadow: 0 8px 20px rgba(255, 65, 108, 0.5);
+    transform: translateY(-3px) scale(1.02); /* Lekkie uniesienie */
+    box-shadow: 0 10px 25px rgba(0, 92, 122, 0.4), /* Większy cień */
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+                inset 0 2px 3px rgba(255, 255, 255, 0.3);
 }
 
-/* Zmieniamy :active aby zawierało skalowanie */
 #calculate-100-button:active,
 #reset-button:active {
-    transform: translateY(1px) scale(0.97); /* Dodano scale */
-    /* Cień można lekko zmniejszyć */
-    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    transform: translateY(1px) scale(0.97); /* Wciśnięcie */
+    box-shadow: 0 3px 10px rgba(0, 92, 122, 0.3), /* Mniejszy cień */
+                inset 0 2px 5px rgba(0, 0, 0, 0.3), /* Mocniejszy cień wewnętrzny */
+                inset 0 -1px 2px rgba(255, 255, 255, 0.1);
 }
-#reset-button:active {
-    box-shadow: 0 2px 8px rgba(255, 65, 108, 0.4);
-}
-/* --- Koniec animacji przycisków --- */
 
 
-/* Media query dla szerszych ekranów */
+/* Dostosowanie do szerszych ekranów - zachowujemy płynność */
 @media (min-width: 600px) {
-    /* Przywracamy większość stylów jak w poprzedniej wersji */
-    body { padding: 20px; }
-    .container { padding: 35px; border-radius: 25px; margin: 40px auto; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-    h1 { font-size: 2.2em; margin-bottom: 35px; }
+    body { padding: 30px; }
+    .container { padding: 40px 50px; border-radius: 60px; margin: 40px auto; }
+    h1 { font-size: 2.5em; margin-bottom: 40px; }
 
-    .denomination-row { flex-wrap: nowrap; gap: 15px; padding: 12px 0; align-items: center; }
+    .denomination-row { flex-wrap: nowrap; gap: 20px; padding: 15px 10px; align-items: center; }
     .denomination-label { flex-basis: 25%; text-align: left; margin-bottom: 0; padding-right: 5px; }
     .inputs-container { flex-basis: 50%; order: 0; flex-wrap: nowrap; margin-top: 0; }
-    .quantity-input { max-width: 45%; width: 100px; }
-    .inputs-container .bill-input { width: 100%; max-width: none; flex-basis: auto; }
+    .quantity-input { max-width: 120px; /* Trochę szersze */ }
+    .inputs-container .bill-input { width: auto; max-width: none; flex-basis: auto; flex-grow: 1; } /* Pozwólmy rosnąć */
     .roll-input-container { flex-basis: auto; flex-wrap: nowrap; margin-top: 0; }
-    .subtotal { flex-basis: 20%; order: 0; align-self: center; margin-top: 0; padding-left: 5px; min-width: 85px; }
-    .denomination-row::after { left: 2%; width: 96%; }
-    #grand-total { font-size: 3em; }
-    
+    .subtotal { flex-basis: 20%; order: 0; align-self: center; margin-top: 0; padding-left: 5px; min-width: 100px; font-size: 1.15rem; }
+
+    #grand-total { font-size: 3.5em; }
+    .withdrawal-results-display { font-size: 1rem; }
 }
