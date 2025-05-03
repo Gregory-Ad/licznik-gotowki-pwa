@@ -169,15 +169,16 @@ h1 {
     transform: translateY(15px);
     max-height: 0; /* Dodajemy max-height dla płynnego zwijania/rozwijania */
     overflow: hidden; /* Ukrywamy zawartość, gdy max-height=0 */
-    transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease, margin-top 0.35s ease, padding 0.35s ease; /* Dodano transition dla max-height, margin, padding */
+    transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.4s ease, margin-top 0.35s ease, padding 0.35s ease;
 }
 .withdrawal-results-display.visible {
     opacity: 1;
     transform: translateY(0);
-    max-height: 500px; /* Ustaw wystarczająco dużą wartość, aby zmieścić treść */
+    max-height: 1000px; /* Ustaw wystarczająco dużą wartość, aby zmieścić treść */
     /* Przywracamy padding i margin, gdy widoczne */
      margin-top: 15px;
      padding: 15px;
+     border-width: 1;
 }
 /* Ustawiamy padding i margin na 0, gdy ukryte, aby uniknąć pustego miejsca */
 .withdrawal-results-display:not(.visible) {
