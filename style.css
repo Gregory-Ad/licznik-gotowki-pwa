@@ -1,4 +1,4 @@
-/* --- START OF FILE style.css (Quantum Flux - Etap 4: Animacja Przycisków) --- */
+/* --- START OF FILE style.css (Quantum Flux - Kompletna Wersja) --- */
 
 /* Import czcionek */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Share+Tech+Mono&display=swap');
@@ -77,47 +77,117 @@ h1 {
     flex-basis: 100%; display: flex; align-items: center; gap: 15px; order: 2;
 }
 
+
+/* --- START ZMODYFIKOWANEJ SEKCJI STYLÓW INPUTÓW --- */
+
 /* --- Style Inputów z Blaskiem SVG --- */
 .quantity-input {
-    background: transparent; border: none;
-    color: var(--qf-energy-tertiary); font-family: var(--font-mono); font-size: 1.1rem;
-    padding: 8px 5px; text-align: right; min-height: 40px; outline: none;
-    width: 80px; position: relative; z-index: 1;
-    transition: box-shadow var(--anim-fast) ease;
+    /* background: transparent; */ /* USUNIĘTE */
+    background-color: rgba(10, 15, 32, 0.45); /* DODANE - Subtelne ciemne tło */
+    /* border: none; */ /* USUNIĘTE */
+    border: 1px solid rgba(80, 208, 255, 0.25); /* DODANE - Delikatna ramka w kolorze energii */
+    border-radius: 4px; /* DODANE - Lekko zaokrąglone rogi */
+    color: var(--qf-energy-tertiary);
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    /* padding: 8px 5px; */ /* ZMODYFIKOWANE */
+    padding: 8px 10px; /* ZWIĘKSZONY padding poziomy dla lepszego odstępu od ramki */
+    text-align: right;
+    min-height: 40px;
+    outline: none;
+    width: 80px; /* Możesz dostosować szerokość w razie potrzeby */
+    position: relative;
+    z-index: 1;
+    /* ZMODYFIKOWANE przejścia, aby objąć nowe właściwości */
+    transition: box-shadow var(--anim-fast) ease,
+                border-color var(--anim-fast) ease,
+                background-color var(--anim-fast) ease;
 }
 
 .quantity-input::placeholder {
-    color: rgba(160, 176, 192, 0.4); opacity: 1; font-family: var(--font-primary); font-weight: 300;
+    /* Zwiększona widoczność placeholdera */
+    color: rgba(160, 176, 192, 0.6);
+    opacity: 1;
+    font-family: var(--font-primary);
+    font-weight: 300;
 }
 
 /* Pseudo-element ::after dla linii i blasku */
 .quantity-input::after {
-    content: ''; position: absolute; bottom: 0; left: 0; width: 100%;
-    height: 2px; background-color: var(--qf-energy-primary);
-    opacity: 0.3; transform: scaleX(1); transform-origin: center;
+    content: '';
+    position: absolute;
+    /* bottom: 0; */ /* ZMODYFIKOWANE - Dopasowanie do ramki */
+    bottom: -1px; /* Pozycjonowanie pod 1px ramką */
+    left: -1px; /* Dopasowanie do lewej krawędzi ramki */
+    /* width: 100%; */ /* ZMODYFIKOWANE - Rozciągnięcie na całą szerokość z ramką */
+    width: calc(100% + 2px);
+    height: 2px; /* Grubość linii bazowej */
+    background-color: var(--qf-energy-primary);
+    /* opacity: 0.3; */ /* ZMODYFIKOWANE */
+    opacity: 0.5; /* Zwiększona domyślna widoczność linii */
+    transform: scaleX(1);
+    transform-origin: center;
     transition: opacity var(--anim-fast) ease-out,
                 height var(--anim-fast) ease-out,
-                filter var(--anim-fast) ease-out;
-    z-index: -1; filter: none;
+                filter var(--anim-fast) ease-out,
+                background-color var(--anim-fast) ease-out;
+    z-index: -1; /* Pod inputem, ale nad tłem */
+    filter: none;
+    border-radius: 0 0 3px 3px; /* Zaokrąglenie dolnych rogów linii */
 }
 
-/* Stylizacja ::after gdy input ma focus */
+/* Stylizacja input i linii na focus */
+.quantity-input:focus {
+    /* Lekkie rozjaśnienie ramki na focus */
+    border-color: rgba(80, 208, 255, 0.6);
+    /* Subtelny zewnętrzny blask dla dodatkowego wyróżnienia */
+    box-shadow: 0 0 6px -1px rgba(80, 208, 255, 0.4);
+    /* Można lekko przyciemnić tło na focus dla kontrastu */
+    background-color: rgba(10, 15, 32, 0.6);
+}
+
 .quantity-input:focus::after {
-    opacity: 0.85; height: 3px;
-    filter: url(#inputGlowEffect);
+    opacity: 0.95; /* Bardzo widoczna linia na focus */
+    height: 3px;   /* Grubsza linia na focus */
+    filter: url(#inputGlowEffect); /* Aktywacja filtru SVG */
+    background-color: var(--qf-energy-primary); /* Upewnienie się, że kolor jest poprawny */
 }
 
-/* Ukrycie strzałek number input */
+/* Ukrycie strzałek number input (bez zmian) */
 .quantity-input::-webkit-outer-spin-button,
 .quantity-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .quantity-input[type=number] { -moz-appearance: textfield; }
 
-/* Style dla inputów rulonów */
+/* Style dla inputów rulonów - zastosowanie podobnych zmian */
 .roll-input-container { display: flex; align-items: center; margin-left: auto; }
 .roll-label { font-size: 0.85em; color: var(--qf-text-subtle); margin-right: 8px; white-space: nowrap; }
-.roll-input { width: 60px; }
-.roll-input::after { background-color: var(--qf-energy-secondary); }
-.roll-input:focus::after { filter: url(#inputGlowEffect); }
+.roll-input {
+    width: 60px; /* Możesz dostosować */
+    /* DODANA specyficzna ramka dla rulonów */
+    border-color: rgba(255, 215, 0, 0.25); /* Złota ramka */
+}
+.roll-input::after {
+    background-color: var(--qf-energy-secondary); /* Złota linia */
+}
+
+/* Stylizacja inputu rulonów i linii na focus */
+.roll-input:focus {
+     /* Rozjaśnienie złotej ramki na focus */
+    border-color: rgba(255, 215, 0, 0.6);
+    /* Złoty zewnętrzny blask */
+    box-shadow: 0 0 6px -1px rgba(255, 215, 0, 0.4);
+    /* Opcjonalne przyciemnienie tła jak w zwykłym input */
+    background-color: rgba(10, 15, 32, 0.6);
+}
+
+.roll-input:focus::after {
+    filter: url(#inputGlowEffect); /* Ten sam efekt blasku */
+    background-color: var(--qf-energy-secondary); /* Upewnienie się, że kolor jest złoty */
+    opacity: 0.95;
+    height: 3px;
+}
+
+/* --- KONIEC ZMODYFIKOWANEJ SEKCJI STYLÓW INPUTÓW --- */
 
 
 /* --- Separator Wierszy SVG --- */
@@ -289,11 +359,15 @@ h1 {
     .denomination-row { flex-wrap: nowrap; gap: 20px; padding: 15px 10px; margin-bottom: 15px; }
     .denomination-label { flex-basis: 25%; text-align: left; margin-bottom: 0; padding-right: 5px; }
     .inputs-container { flex-basis: auto; order: 0; flex-wrap: nowrap; margin-top: 0; width: auto; }
-    .quantity-input { max-width: 110px; }
+    /* Zwiększenie szerokości inputów na większych ekranach */
+    .quantity-input { width: 100px; }
+    .roll-input { width: 70px; }
     .roll-input-container { /* Zostaje po prawej */ }
     .subtotal { flex-basis: 20%; order: 0; align-self: center; margin-top: 0; padding-left: 5px; min-width: 120px; font-size: 1.25rem; }
     #grand-total { font-size: 3.5em; }
     .withdrawal-results-display { font-size: 1rem; }
+
+    /* --- Ripple Effect (działa na wszystkich rozmiarach, ale zdefiniowany tu) --- */
     .ripple {
         position: absolute; /* Pozycjonowany względem przycisku */
         border-radius: 50%;
@@ -303,13 +377,13 @@ h1 {
         pointer-events: none; /* Nie blokuje kliknięć */
         z-index: 0; /* Pod tekstem przycisku, ale nad ::before */
     }
-    
+
     /* Dostosowanie koloru fali dla przycisku $100 */
     #calculate-100-button .ripple {
         background-color: rgba(255, 215, 0, 0.4); /* Półprzezroczysty złoty */
     }
-    
-    
+
+
     /* Animacja fali */
     @keyframes ripple-effect {
         to {
@@ -317,8 +391,7 @@ h1 {
             opacity: 0;        /* Zanika */
         }
     }
-    
-    /* --- KONIEC DODANYCH STYLÓW --- */
+    /* --- KONIEC SEKCJI RIPPLE --- */
 }
 
 /* --- END OF FILE style.css --- */
